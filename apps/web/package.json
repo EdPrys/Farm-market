@@ -12,6 +12,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@farm-market/shared": "workspace:*",
     "@farm-market/ui": "workspace:*",
     "@tailwindcss/vite": "^4.3.0",
     "@tanstack/react-query": "^5.100.14",

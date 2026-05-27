@@ -10,13 +10,37 @@
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 import { controllers } from '#generated/controllers'
+import app from '@adonisjs/core/services/app'
+import { createReadStream } from 'node:fs'
+import { stat } from 'node:fs/promises'
 
 router.get('/', () => {
   return { hello: 'world' }
 })
 
+router.get('/uploads/*', async ({ request, response }) => {
+  const parts = request.param('*') as string[]
+  const absolutePath = app.makePath('storage', 'uploads', ...parts)
+  try {
+    const stats = await stat(absolutePath)
+    response.header('Content-Length', String(stats.size))
+    return response.stream(createReadStream(absolutePath))
+  } catch {
+    return response.notFound({ message: 'File not found' })
+  }
+})
+
 router
   .group(() => {
+    router.get('categories', [controllers.Categories, 'index'])
+
+    router
+      .group(() => {
+        router.get('/', [controllers.Products, 'index'])
+        router.get('/:id', [controllers.Products, 'show'])
+      })
+      .prefix('products')
+
     router
       .group(() => {
         router.post('signup', [controllers.NewAccount, 'store'])
@@ -33,5 +57,16 @@ router
       .prefix('account')
       .as('profile')
       .use(middleware.auth())
+
+    router
+      .group(() => {
+        router.get('products', [controllers.seller.SellerProducts, 'index'])
+        router.post('products', [controllers.seller.SellerProducts, 'store'])
+        router.put('products/:id', [controllers.seller.SellerProducts, 'update'])
+        router.delete('products/:id', [controllers.seller.SellerProducts, 'destroy'])
+        router.post('products/:id/image', [controllers.seller.SellerProducts, 'uploadImage'])
+      })
+      .prefix('seller')
+      .use([middleware.auth(), middleware.seller()])
   })
   .prefix('/api/v1')
