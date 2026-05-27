@@ -10,7 +10,7 @@ export default class NewAccountController {
     const user = await User.create({ fullName, email, password })
     const token = await User.accessTokens.create(user)
 
-    return serialize({
+    return serialize.withoutWrapping({
       user: UserTransformer.transform(user),
       token: token.value!.release(),
     })
