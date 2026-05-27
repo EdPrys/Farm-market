@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { Logo } from '../auth/logo'
 import { useCurrentUser } from '../auth/use-current-user'
 import { useLogout } from '../auth/use-logout'
@@ -7,6 +7,7 @@ import { useLogout } from '../auth/use-logout'
 export function AppLayout({ children }: { children: ReactNode }) {
   const { data: user } = useCurrentUser()
   const logout = useLogout()
+  const navigate = useNavigate()
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -35,7 +36,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             </button>
             {user && (
               <button
-                onClick={() => void logout.mutate()}
+                onClick={() => void logout.mutate(undefined, { onSettled: () => void navigate({ to: '/catalog' }) })}
                 className="text-gray-700 hover:text-red-600"
               >
                 Вийти

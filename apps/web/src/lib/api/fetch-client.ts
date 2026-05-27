@@ -11,8 +11,9 @@ export async function apiFetch<T = unknown>(path: string, init?: RequestInit): P
 
   const res = await fetch(path, { ...init, headers })
   if (!res.ok) {
-    const body = (await res.json()) as { message?: string }
-    throw new Error(body.message ?? 'Request failed')
+    const body = (await res.json()) as { message?: string; errors?: Array<{ message: string }> }
+    const message = body.message ?? body.errors?.[0]?.message ?? 'Request failed'
+    throw new Error(message)
   }
   if (res.status === 204) return null as T
   return (await res.json()) as T

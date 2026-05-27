@@ -8,7 +8,7 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: authApi.logout,
-    onSuccess: () => {
+    onSettled: () => {
       clearToken()
       queryClient.clear()
     },
