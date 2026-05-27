@@ -23,7 +23,7 @@ export function SignupPage() {
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-bold text-gray-900 mb-1">Реєстрація</h1>
         <p className="text-sm text-muted-foreground mb-8">Створіть свій акаунт</p>
-        <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-4">
+        <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="fullName">Повне ім'я</Label>
             <Input
@@ -33,7 +33,7 @@ export function SignupPage() {
               onChange={(e) => setFullName(e.target.value)}
             />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
@@ -44,7 +44,7 @@ export function SignupPage() {
               required
             />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="password">Пароль</Label>
             <Input
               id="password"
@@ -55,7 +55,7 @@ export function SignupPage() {
               required
             />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="passwordConfirmation">Підтвердження пароля</Label>
             <Input
               id="passwordConfirmation"
