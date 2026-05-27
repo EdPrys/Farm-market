@@ -11,6 +11,8 @@ interface SignupInput {
   email: string
   password: string
   passwordConfirmation: string
+  isSeller?: boolean
+  farmName?: string | null
 }
 
 export const authApi = {

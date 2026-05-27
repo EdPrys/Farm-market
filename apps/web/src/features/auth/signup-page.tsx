@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useRouter } from '@tanstack/react-router'
-import { Button, Input, Label } from '@farm-market/ui'
+import { Button, Input, Label, Checkbox } from '@farm-market/ui'
 import { useSignup } from './use-signup'
 import { AuthLayout } from './auth-layout'
 
@@ -9,13 +9,22 @@ export function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
+  const [isSeller, setIsSeller] = useState(false)
+  const [farmName, setFarmName] = useState('')
   const signup = useSignup()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await signup.mutateAsync({ fullName: fullName || null, email, password, passwordConfirmation })
-    await router.navigate({ to: '/dashboard' })
+    await signup.mutateAsync({
+      fullName: fullName || null,
+      email,
+      password,
+      passwordConfirmation,
+      isSeller,
+      farmName: isSeller && farmName ? farmName : null,
+    })
+    await router.navigate({ to: '/catalog' })
   }
 
   return (
@@ -66,6 +75,27 @@ export function SignupPage() {
               required
             />
           </div>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="isSeller"
+              checked={isSeller}
+              onCheckedChange={(checked) => setIsSeller(checked === true)}
+            />
+            <Label htmlFor="isSeller" className="cursor-pointer">
+              Я продавець — хочу продавати товари
+            </Label>
+          </div>
+          {isSeller && (
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="farmName">Назва ферми або господарства</Label>
+              <Input
+                id="farmName"
+                placeholder="Ферма Петренків"
+                value={farmName}
+                onChange={(e) => setFarmName(e.target.value)}
+              />
+            </div>
+          )}
           {signup.isError && (
             <p className="text-sm text-destructive">
               {signup.error instanceof Error ? signup.error.message : 'Помилка реєстрації'}
