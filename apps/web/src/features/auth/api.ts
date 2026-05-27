@@ -1,5 +1,5 @@
 import { apiFetch } from '../../lib/api/fetch-client'
-import type { User, AuthResponse } from './types'
+import type { User, AuthResponse, LoginResponse } from './types'
 
 interface LoginInput {
   email: string
@@ -15,7 +15,7 @@ interface SignupInput {
 
 export const authApi = {
   login: (data: LoginInput) =>
-    apiFetch<AuthResponse>('/api/v1/auth/login', {
+    apiFetch<LoginResponse>('/api/v1/auth/login', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
