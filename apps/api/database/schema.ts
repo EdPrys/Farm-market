@@ -8,18 +8,7 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class AuthAccessTokenSchema extends BaseModel {
-  static $columns = [
-    'abilities',
-    'createdAt',
-    'expiresAt',
-    'hash',
-    'id',
-    'lastUsedAt',
-    'name',
-    'tokenableId',
-    'type',
-    'updatedAt',
-  ] as const
+  static $columns = ['abilities', 'createdAt', 'expiresAt', 'hash', 'id', 'lastUsedAt', 'name', 'tokenableId', 'type', 'updatedAt'] as const
   $columns = AuthAccessTokenSchema.$columns
   @column()
   declare abilities: string
@@ -59,20 +48,7 @@ export class CategorySchema extends BaseModel {
 }
 
 export class ProductSchema extends BaseModel {
-  static $columns = [
-    'categoryId',
-    'createdAt',
-    'description',
-    'id',
-    'imagePath',
-    'name',
-    'price',
-    'quantity',
-    'sellerId',
-    'status',
-    'unit',
-    'updatedAt',
-  ] as const
+  static $columns = ['categoryId', 'createdAt', 'description', 'id', 'imagePath', 'name', 'price', 'quantity', 'sellerId', 'status', 'unit', 'updatedAt'] as const
   $columns = ProductSchema.$columns
   @column()
   declare categoryId: number
@@ -101,16 +77,7 @@ export class ProductSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = [
-    'createdAt',
-    'email',
-    'farmName',
-    'fullName',
-    'id',
-    'isSeller',
-    'password',
-    'updatedAt',
-  ] as const
+  static $columns = ['createdAt', 'email', 'farmName', 'fullName', 'id', 'isSeller', 'password', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

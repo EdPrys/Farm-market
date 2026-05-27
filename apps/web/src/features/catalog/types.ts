@@ -13,6 +13,7 @@ export interface ProductSeller {
 export interface Product {
   id: number
   name: string
+  description: string | null
   price: string
   unit: string
   quantity: string
