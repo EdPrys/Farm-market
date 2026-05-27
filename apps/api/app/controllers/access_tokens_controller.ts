@@ -1,10 +1,11 @@
 import User from '#models/user'
-import { loginValidator } from '#validators/user'
+import { loginSchema } from '#validators/user'
+import { zodValidate } from '#lib/zod_validate'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class AccessTokensController {
   async store({ request }: HttpContext) {
-    const { email, password } = await request.validateUsing(loginValidator)
+    const { email, password } = zodValidate(loginSchema, request.body())
 
     const user = await User.verifyCredentials(email, password)
     const token = await User.accessTokens.create(user)

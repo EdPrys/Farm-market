@@ -32,15 +32,15 @@ importers:
       '@adonisjs/shield':
         specifier: ^9.0.0
         version: 9.0.0(953a050f49023e999d574825ec406238)
+      '@farm-market/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@japa/api-client':
         specifier: ^3.2.1
         version: 3.2.1(@japa/assert@4.2.0(@japa/runner@5.3.0))(@japa/runner@5.3.0)
       '@tuyau/core':
         specifier: ^1.2.2
         version: 1.2.2(@adonisjs/assembler@8.4.0(typescript@6.0.3))(@adonisjs/core@7.3.3(@adonisjs/assembler@8.4.0(typescript@6.0.3))(@vinejs/vine@4.4.0)(pino-pretty@13.1.3)(youch@4.1.1))
-      '@vinejs/vine':
-        specifier: ^4.3.1
-        version: 4.4.0
       better-sqlite3:
         specifier: ^12.9.0
         version: 12.10.0
@@ -53,6 +53,9 @@ importers:
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
+      zod:
+        specifier: ^3.25.0
+        version: 3.25.76
     devDependencies:
       '@adonisjs/assembler':
         specifier: ^8.4.0
@@ -105,6 +108,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@farm-market/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@farm-market/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -181,6 +187,16 @@ importers:
       vitest:
         specifier: ^4.1.7
         version: 4.1.7(@types/node@24.12.4)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.0.14(@types/node@24.12.4)(jiti@2.7.0))
+
+  packages/shared:
+    dependencies:
+      zod:
+        specifier: ^3.25.0
+        version: 3.25.76
+    devDependencies:
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
 
   packages/ui:
     dependencies:
@@ -3810,6 +3826,9 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
@@ -5042,7 +5061,8 @@ snapshots:
       '@types/node': 25.6.2
       form-data: 4.0.5
 
-  '@types/validator@13.15.10': {}
+  '@types/validator@13.15.10':
+    optional: true
 
   '@typescript-eslint/eslint-plugin@8.60.0(@typescript-eslint/parser@8.60.0(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
@@ -5135,7 +5155,8 @@ snapshots:
       '@typescript-eslint/types': 8.60.0
       eslint-visitor-keys: 5.0.1
 
-  '@vinejs/compiler@4.1.3': {}
+  '@vinejs/compiler@4.1.3':
+    optional: true
 
   '@vinejs/vine@4.4.0':
     dependencies:
@@ -5149,6 +5170,7 @@ snapshots:
       dlv: 1.1.3
       normalize-url: 8.1.1
       validator: 13.15.35
+    optional: true
 
   '@vitejs/plugin-react@6.0.2(vite@8.0.14(@types/node@24.12.4)(jiti@2.7.0))':
     dependencies:
@@ -5340,7 +5362,8 @@ snapshots:
       call-bind-apply-helpers: 1.0.2
       get-intrinsic: 1.3.0
 
-  camelcase@9.0.0: {}
+  camelcase@9.0.0:
+    optional: true
 
   caniuse-lite@1.0.30001793: {}
 
@@ -5467,7 +5490,8 @@ snapshots:
 
   dateformat@4.6.3: {}
 
-  dayjs@1.11.21: {}
+  dayjs@1.11.21:
+    optional: true
 
   debug@4.3.4:
     dependencies:
@@ -5515,7 +5539,8 @@ snapshots:
 
   diff@8.0.4: {}
 
-  dlv@1.1.3: {}
+  dlv@1.1.3:
+    optional: true
 
   dunder-proto@1.0.1:
     dependencies:
@@ -5601,8 +5626,8 @@ snapshots:
       '@babel/parser': 7.29.7
       eslint: 10.4.0(jiti@2.7.0)
       hermes-parser: 0.25.1
-      zod: 4.4.3
-      zod-validation-error: 4.0.2(zod@4.4.3)
+      zod: 3.25.76
+      zod-validation-error: 4.0.2(zod@3.25.76)
     transitivePeerDependencies:
       - supports-color
 
@@ -6313,7 +6338,8 @@ snapshots:
       semver: 7.8.1
       validate-npm-package-license: 3.0.4
 
-  normalize-url@8.1.1: {}
+  normalize-url@8.1.1:
+    optional: true
 
   npm-run-path@6.0.0:
     dependencies:
@@ -7031,7 +7057,8 @@ snapshots:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
 
-  validator@13.15.35: {}
+  validator@13.15.35:
+    optional: true
 
   vary@1.1.2: {}
 
@@ -7145,8 +7172,10 @@ snapshots:
       cookie-es: 3.1.1
       youch-core: 0.3.3
 
-  zod-validation-error@4.0.2(zod@4.4.3):
+  zod-validation-error@4.0.2(zod@3.25.76):
     dependencies:
-      zod: 4.4.3
+      zod: 3.25.76
+
+  zod@3.25.76: {}
 
   zod@4.4.3: {}

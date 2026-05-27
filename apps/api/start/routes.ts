@@ -17,6 +17,8 @@ router.get('/', () => {
 
 router
   .group(() => {
+    router.get('categories', [controllers.Categories, 'index'])
+
     router
       .group(() => {
         router.post('signup', [controllers.NewAccount, 'store'])
