@@ -58,6 +58,48 @@ export class CategorySchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class ProductSchema extends BaseModel {
+  static $columns = [
+    'categoryId',
+    'createdAt',
+    'description',
+    'id',
+    'imagePath',
+    'name',
+    'price',
+    'quantity',
+    'sellerId',
+    'status',
+    'unit',
+    'updatedAt',
+  ] as const
+  $columns = ProductSchema.$columns
+  @column()
+  declare categoryId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare imagePath: string | null
+  @column()
+  declare name: string
+  @column()
+  declare price: string
+  @column()
+  declare quantity: string
+  @column()
+  declare sellerId: number
+  @column()
+  declare status: string
+  @column()
+  declare unit: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class UserSchema extends BaseModel {
   static $columns = [
     'createdAt',
