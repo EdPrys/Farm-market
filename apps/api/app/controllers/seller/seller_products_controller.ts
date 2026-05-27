@@ -2,6 +2,7 @@ import Product from '#models/product'
 import ProductTransformer from '#transformers/product_transformer'
 import { createProductSchema, updateProductSchema } from '#validators/product'
 import { zodValidate } from '#lib/zod_validate'
+import app from '@adonisjs/core/services/app'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class SellerProductsController {
@@ -69,5 +70,36 @@ export default class SellerProductsController {
 
     await product.delete()
     return response.noContent()
+  }
+
+  async uploadImage({ auth, params, request, response, serialize }: HttpContext) {
+    const seller = auth.getUserOrFail()
+    const product = await Product.query()
+      .where('id', params.id)
+      .where('seller_id', seller.id)
+      .preload('category')
+      .preload('seller')
+      .first()
+
+    if (!product) return response.notFound({ message: 'Product not found' })
+
+    const image = request.file('image', {
+      size: '5mb',
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
+    })
+
+    if (!image) return response.unprocessableEntity({ message: 'No image provided' })
+    if (!image.isValid) return response.unprocessableEntity({ message: image.errors })
+
+    const { randomUUID } = await import('node:crypto')
+    const ext = image.extname
+    const fileName = `${randomUUID()}.${ext}`
+
+    await image.move(app.makePath('storage/uploads/products'), { name: fileName })
+
+    product.imagePath = `/uploads/products/${fileName}`
+    await product.save()
+
+    return serialize.withoutWrapping(ProductTransformer.transform(product))
   }
 }

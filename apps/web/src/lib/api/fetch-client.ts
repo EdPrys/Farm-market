@@ -2,8 +2,9 @@ export const TOKEN_KEY = 'auth_token'
 
 export async function apiFetch<T = unknown>(path: string, init?: RequestInit): Promise<T> {
   const token = localStorage.getItem(TOKEN_KEY)
+  const isFormData = init?.body instanceof FormData
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
     ...((init?.headers as Record<string, string>) ?? {}),
   }
   if (token) headers['Authorization'] = `Bearer ${token}`
