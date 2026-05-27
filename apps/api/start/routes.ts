@@ -21,6 +21,13 @@ router
 
     router
       .group(() => {
+        router.get('/', [controllers.Products, 'index'])
+        router.get('/:id', [controllers.Products, 'show'])
+      })
+      .prefix('products')
+
+    router
+      .group(() => {
         router.post('signup', [controllers.NewAccount, 'store'])
         router.post('login', [controllers.AccessTokens, 'store'])
       })
