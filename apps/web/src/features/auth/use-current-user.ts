@@ -1,13 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
-import { apiFetch } from '../api/fetch-client'
 import { useAuth } from './use-auth'
-import type { User } from './types'
+import { authApi } from './api'
 
 export function useCurrentUser() {
   const { token } = useAuth()
-  return useQuery<User>({
+  return useQuery({
     queryKey: ['user'],
-    queryFn: () => apiFetch<User>('/api/v1/account/profile'),
+    queryFn: authApi.profile,
     enabled: !!token,
     retry: false,
   })

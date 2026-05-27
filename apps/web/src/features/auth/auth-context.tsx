@@ -1,5 +1,5 @@
 import { createContext, useCallback, useMemo, useState, type ReactNode } from 'react'
-import { TOKEN_KEY } from '../api/fetch-client'
+import { TOKEN_KEY } from '../../lib/api/fetch-client'
 
 export interface AuthContextValue {
   token: string | null
