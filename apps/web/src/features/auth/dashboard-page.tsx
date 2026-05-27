@@ -1,7 +1,8 @@
 import { useRouter } from '@tanstack/react-router'
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@farm-market/ui'
+import { Button } from '@farm-market/ui'
 import { useCurrentUser } from './use-current-user'
 import { useLogout } from './use-logout'
+import { AuthLayout } from './auth-layout'
 
 export function DashboardPage() {
   const { data: user, isLoading } = useCurrentUser()
@@ -14,26 +15,38 @@ export function DashboardPage() {
     })
   }
 
-  if (isLoading) return <p className="p-8">Завантаження...</p>
+  if (isLoading) {
+    return (
+      <AuthLayout>
+        <p className="text-muted-foreground">Завантаження...</p>
+      </AuthLayout>
+    )
+  }
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Особистий кабінет</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {user && (
-            <div className="flex flex-col gap-1 text-sm">
-              <p>Привіт, <span className="font-medium">{user.fullName ?? user.email}</span>!</p>
-              <p className="text-muted-foreground">Email: {user.email}</p>
+    <AuthLayout>
+      <div className="w-full max-w-sm flex flex-col gap-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Особистий кабінет</h1>
+          <p className="text-sm text-muted-foreground">Керуйте своїм акаунтом</p>
+        </div>
+        {user && (
+          <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+                {user.initials}
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">{user.fullName ?? user.email}</p>
+                <p className="text-sm text-muted-foreground">{user.email}</p>
+              </div>
             </div>
-          )}
-          <Button variant="outline" onClick={handleLogout} disabled={logout.isPending}>
-            {logout.isPending ? 'Виходимо...' : 'Вийти'}
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
+          </div>
+        )}
+        <Button variant="outline" onClick={handleLogout} disabled={logout.isPending} className="w-full">
+          {logout.isPending ? 'Виходимо...' : 'Вийти'}
+        </Button>
+      </div>
+    </AuthLayout>
   )
 }
