@@ -35,7 +35,7 @@ export default class ProductsController {
     return serialize(ProductTransformer.transform(products))
   }
 
-  async show({ params, serialize, response }: HttpContext) {
+  async show({ params, auth, response }: HttpContext) {
     const product = await Product.query()
       .where('id', params.id)
       .preload('category')
@@ -46,6 +46,34 @@ export default class ProductsController {
       return response.notFound({ message: 'Product not found' })
     }
 
-    return serialize.withoutWrapping(ProductTransformer.transform(product))
+    const isAuthenticated = await auth.check()
+
+    return response.ok({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      unit: product.unit,
+      quantity: product.quantity,
+      imagePath: product.imagePath,
+      status: product.status,
+      category: product.category
+        ? { id: product.category.id, name: product.category.name, slug: product.category.slug }
+        : null,
+      seller: product.seller
+        ? {
+            id: product.seller.id,
+            fullName: product.seller.fullName,
+            farmName: product.seller.farmName,
+            contacts: isAuthenticated
+              ? {
+                  phones: product.seller.phones ?? [],
+                  telegram: product.seller.telegram ?? null,
+                  viber: product.seller.viber ?? null,
+                }
+              : null,
+          }
+        : null,
+    })
   }
 }

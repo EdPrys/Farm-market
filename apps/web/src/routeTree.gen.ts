@@ -15,6 +15,7 @@ import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as SellerRouteRouteImport } from './routes/seller/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SellerProfileRouteImport } from './routes/seller/profile'
 import { Route as ProductsIdRouteImport } from './routes/products/$id'
 import { Route as FarmersIdRouteImport } from './routes/farmers/$id'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -50,6 +51,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SellerProfileRoute = SellerProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => SellerRouteRoute,
 } as any)
 const ProductsIdRoute = ProductsIdRouteImport.update({
   id: '/products/$id',
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/farmers/$id': typeof FarmersIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/seller/profile': typeof SellerProfileRoute
   '/seller/products/new': typeof SellerProductsNewRoute
   '/seller/products/': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/farmers/$id': typeof FarmersIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/seller/profile': typeof SellerProfileRoute
   '/seller/products/new': typeof SellerProductsNewRoute
   '/seller/products': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/farmers/$id': typeof FarmersIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/seller/profile': typeof SellerProfileRoute
   '/seller/products/new': typeof SellerProductsNewRoute
   '/seller/products/': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/farmers/$id'
     | '/products/$id'
+    | '/seller/profile'
     | '/seller/products/new'
     | '/seller/products/'
     | '/seller/products/$id/edit'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/farmers/$id'
     | '/products/$id'
+    | '/seller/profile'
     | '/seller/products/new'
     | '/seller/products'
     | '/seller/products/$id/edit'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/farmers/$id'
     | '/products/$id'
+    | '/seller/profile'
     | '/seller/products/new'
     | '/seller/products/'
     | '/seller/products/$id/edit'
@@ -221,6 +233,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/seller/profile': {
+      id: '/seller/profile'
+      path: '/profile'
+      fullPath: '/seller/profile'
+      preLoaderRoute: typeof SellerProfileRouteImport
+      parentRoute: typeof SellerRouteRoute
+    }
     '/products/$id': {
       id: '/products/$id'
       path: '/products/$id'
@@ -278,12 +297,14 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface SellerRouteRouteChildren {
+  SellerProfileRoute: typeof SellerProfileRoute
   SellerProductsNewRoute: typeof SellerProductsNewRoute
   SellerProductsIndexRoute: typeof SellerProductsIndexRoute
   SellerProductsIdEditRoute: typeof SellerProductsIdEditRoute
 }
 
 const SellerRouteRouteChildren: SellerRouteRouteChildren = {
+  SellerProfileRoute: SellerProfileRoute,
   SellerProductsNewRoute: SellerProductsNewRoute,
   SellerProductsIndexRoute: SellerProductsIndexRoute,
   SellerProductsIdEditRoute: SellerProductsIdEditRoute,

@@ -24,12 +24,20 @@ export function AppLayout({ children }: { children: ReactNode }) {
               Каталог
             </Link>
             {user?.isSeller && (
-              <Link
-                to="/seller/products"
-                className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
-              >
-                Мої товари
-              </Link>
+              <>
+                <Link
+                  to="/seller/products"
+                  className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
+                >
+                  Мої товари
+                </Link>
+                <Link
+                  to="/seller/profile"
+                  className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
+                >
+                  Профіль
+                </Link>
+              </>
             )}
             <button className="text-gray-400 cursor-not-allowed" disabled>
               Кошик

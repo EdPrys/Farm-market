@@ -1,6 +1,12 @@
 import { apiFetch } from '../../lib/api/fetch-client'
 import type { Product } from '../catalog/types'
 
+export interface SellerProfile {
+  phones: string[]
+  telegram: string | null
+  viber: string | null
+}
+
 export interface ProductInput {
   name: string
   categoryId: number
@@ -14,6 +20,12 @@ export interface ProductInput {
 export type ProductUpdateInput = Partial<ProductInput>
 
 export const sellerApi = {
+  getProfile: () => apiFetch<SellerProfile>('/api/v1/seller/profile'),
+  updateProfile: (data: Partial<SellerProfile>) =>
+    apiFetch<SellerProfile>('/api/v1/seller/profile', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
   getProducts: () => apiFetch<{ data: Product[] }>('/api/v1/seller/products'),
   createProduct: (data: ProductInput) =>
     apiFetch<Product>('/api/v1/seller/products', {

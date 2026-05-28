@@ -62,6 +62,14 @@ router
 
     router
       .group(() => {
+        router.get('profile', [
+          () => import('#controllers/seller/seller_profile_controller'),
+          'show',
+        ])
+        router.put('profile', [
+          () => import('#controllers/seller/seller_profile_controller'),
+          'update',
+        ])
         router.get('products', [controllers.seller.SellerProducts, 'index'])
         router.post('products', [controllers.seller.SellerProducts, 'store'])
         router.put('products/:id', [controllers.seller.SellerProducts, 'update'])

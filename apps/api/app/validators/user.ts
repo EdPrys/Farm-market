@@ -1,2 +1,2 @@
-export { signupSchema, loginSchema } from '@farm-market/shared'
-export type { SignupInput, LoginInput } from '@farm-market/shared'
+export { signupSchema, loginSchema, updateSellerProfileSchema } from '@farm-market/shared'
+export type { SignupInput, LoginInput, UpdateSellerProfileInput } from '@farm-market/shared'

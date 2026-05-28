@@ -3,12 +3,14 @@ import User from '#models/user'
 import Product from '#models/product'
 
 export default class FarmersController {
-  async show({ params, response }: HttpContext) {
+  async show({ params, auth, response }: HttpContext) {
     const farmer = await User.query().where('id', params.id).where('is_seller', true).first()
 
     if (!farmer) {
       return response.notFound({ message: 'Farmer not found' })
     }
+
+    const isAuthenticated = await auth.check()
 
     const products = await Product.query()
       .where('seller_id', farmer.id)
@@ -23,6 +25,9 @@ export default class FarmersController {
       fullName: farmer.fullName,
       farmName: farmer.farmName,
       memberSince: farmer.createdAt,
+      contacts: isAuthenticated
+        ? { phones: farmer.phones ?? [], telegram: farmer.telegram, viber: farmer.viber }
+        : null,
       products: products.map((p) => ({
         id: p.id,
         name: p.name,
