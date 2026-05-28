@@ -14,7 +14,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       <header className="border-b bg-white sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/catalog">
-            <Logo />
+            <Logo variant="dark" />
           </Link>
           <nav className="flex items-center gap-6 text-sm font-medium">
             <Link
