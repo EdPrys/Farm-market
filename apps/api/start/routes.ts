@@ -70,5 +70,11 @@ router
       })
       .prefix('seller')
       .use([middleware.auth(), middleware.seller()])
+
+    router
+      .group(() => {
+        router.get('/:id', [() => import('#controllers/farmers_controller'), 'show'])
+      })
+      .prefix('farmers')
   })
   .prefix('/api/v1')
