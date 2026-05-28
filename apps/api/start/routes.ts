@@ -18,6 +18,8 @@ router.get('/', () => {
   return { hello: 'world' }
 })
 
+router.get('/health', [controllers.Health, 'show'])
+
 router.get('/uploads/*', async ({ request, response }) => {
   const parts = request.param('*') as string[]
   const absolutePath = app.makePath('storage', 'uploads', ...parts)
