@@ -1,9 +1,12 @@
-import { useParams } from '@tanstack/react-router'
+import { useParams, Link } from '@tanstack/react-router'
 import { useProduct } from './use-product'
+import { useCurrentUser } from '../auth/use-current-user'
+import { ContactBlock } from '../farmers/contact-block'
 
 export function ProductPage() {
   const { id } = useParams({ strict: false }) as { id: string }
   const { data: product, isLoading, isError } = useProduct(Number(id))
+  const { data: user } = useCurrentUser()
 
   if (isLoading) return <div className="p-8 text-sm text-gray-500">Завантаження...</div>
   if (isError || !product) return <div className="p-8 text-sm text-red-500">Товар не знайдено</div>
@@ -38,9 +41,13 @@ export function ProductPage() {
           </span>
         </p>
         <div className="text-sm text-gray-600">
-          <p className="font-medium">
+          <Link
+            to="/farmers/$id"
+            params={{ id: String(product.seller.id) }}
+            className="font-medium hover:text-green-700 hover:underline"
+          >
             {product.seller.farmName ?? product.seller.fullName ?? 'Продавець'}
-          </p>
+          </Link>
         </div>
         {product.description && (
           <p className="text-sm text-gray-700 leading-relaxed">{product.description}</p>
@@ -51,6 +58,7 @@ export function ProductPage() {
         >
           До кошика (незабаром)
         </button>
+        <ContactBlock contacts={product.seller?.contacts ?? null} isAuthenticated={!!user} />
       </div>
     </div>
   )

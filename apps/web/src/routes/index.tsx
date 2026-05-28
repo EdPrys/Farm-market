@@ -1,8 +1,6 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { LandingPage } from '../features/landing/landing-page'
 
 export const Route = createFileRoute('/')({
-  beforeLoad: () => {
-    throw redirect({ to: '/catalog' })
-  },
-  component: () => null,
+  component: LandingPage,
 })

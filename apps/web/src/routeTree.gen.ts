@@ -15,7 +15,9 @@ import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as SellerRouteRouteImport } from './routes/seller/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SellerProfileRouteImport } from './routes/seller/profile'
 import { Route as ProductsIdRouteImport } from './routes/products/$id'
+import { Route as FarmersIdRouteImport } from './routes/farmers/$id'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as SellerProductsIndexRouteImport } from './routes/seller/products/index'
 import { Route as SellerProductsNewRouteImport } from './routes/seller/products/new'
@@ -50,9 +52,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SellerProfileRoute = SellerProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => SellerRouteRoute,
+} as any)
 const ProductsIdRoute = ProductsIdRouteImport.update({
   id: '/products/$id',
   path: '/products/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FarmersIdRoute = FarmersIdRouteImport.update({
+  id: '/farmers/$id',
+  path: '/farmers/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -83,7 +95,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/farmers/$id': typeof FarmersIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/seller/profile': typeof SellerProfileRoute
   '/seller/products/new': typeof SellerProductsNewRoute
   '/seller/products/': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRoute
@@ -95,7 +109,9 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/farmers/$id': typeof FarmersIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/seller/profile': typeof SellerProfileRoute
   '/seller/products/new': typeof SellerProductsNewRoute
   '/seller/products': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRoute
@@ -109,7 +125,9 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/farmers/$id': typeof FarmersIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/seller/profile': typeof SellerProfileRoute
   '/seller/products/new': typeof SellerProductsNewRoute
   '/seller/products/': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRoute
@@ -123,7 +141,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/farmers/$id'
     | '/products/$id'
+    | '/seller/profile'
     | '/seller/products/new'
     | '/seller/products/'
     | '/seller/products/$id/edit'
@@ -135,7 +155,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/farmers/$id'
     | '/products/$id'
+    | '/seller/profile'
     | '/seller/products/new'
     | '/seller/products'
     | '/seller/products/$id/edit'
@@ -148,7 +170,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_authenticated/dashboard'
+    | '/farmers/$id'
     | '/products/$id'
+    | '/seller/profile'
     | '/seller/products/new'
     | '/seller/products/'
     | '/seller/products/$id/edit'
@@ -161,6 +185,7 @@ export interface RootRouteChildren {
   CatalogRoute: typeof CatalogRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  FarmersIdRoute: typeof FarmersIdRoute
   ProductsIdRoute: typeof ProductsIdRoute
 }
 
@@ -208,11 +233,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/seller/profile': {
+      id: '/seller/profile'
+      path: '/profile'
+      fullPath: '/seller/profile'
+      preLoaderRoute: typeof SellerProfileRouteImport
+      parentRoute: typeof SellerRouteRoute
+    }
     '/products/$id': {
       id: '/products/$id'
       path: '/products/$id'
       fullPath: '/products/$id'
       preLoaderRoute: typeof ProductsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/farmers/$id': {
+      id: '/farmers/$id'
+      path: '/farmers/$id'
+      fullPath: '/farmers/$id'
+      preLoaderRoute: typeof FarmersIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard': {
@@ -258,12 +297,14 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface SellerRouteRouteChildren {
+  SellerProfileRoute: typeof SellerProfileRoute
   SellerProductsNewRoute: typeof SellerProductsNewRoute
   SellerProductsIndexRoute: typeof SellerProductsIndexRoute
   SellerProductsIdEditRoute: typeof SellerProductsIdEditRoute
 }
 
 const SellerRouteRouteChildren: SellerRouteRouteChildren = {
+  SellerProfileRoute: SellerProfileRoute,
   SellerProductsNewRoute: SellerProductsNewRoute,
   SellerProductsIndexRoute: SellerProductsIndexRoute,
   SellerProductsIdEditRoute: SellerProductsIdEditRoute,
@@ -280,6 +321,7 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogRoute: CatalogRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  FarmersIdRoute: FarmersIdRoute,
   ProductsIdRoute: ProductsIdRoute,
 }
 export const routeTree = rootRouteImport

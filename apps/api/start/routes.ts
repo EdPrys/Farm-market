@@ -18,6 +18,8 @@ router.get('/', () => {
   return { hello: 'world' }
 })
 
+router.get('/health', [controllers.Health, 'show'])
+
 router.get('/uploads/*', async ({ request, response }) => {
   const parts = request.param('*') as string[]
   const absolutePath = app.makePath('storage', 'uploads', ...parts)
@@ -60,6 +62,14 @@ router
 
     router
       .group(() => {
+        router.get('profile', [
+          () => import('#controllers/seller/seller_profile_controller'),
+          'show',
+        ])
+        router.put('profile', [
+          () => import('#controllers/seller/seller_profile_controller'),
+          'update',
+        ])
         router.get('products', [controllers.seller.SellerProducts, 'index'])
         router.post('products', [controllers.seller.SellerProducts, 'store'])
         router.put('products/:id', [controllers.seller.SellerProducts, 'update'])
@@ -68,5 +78,11 @@ router
       })
       .prefix('seller')
       .use([middleware.auth(), middleware.seller()])
+
+    router
+      .group(() => {
+        router.get('/:id', [() => import('#controllers/farmers_controller'), 'show'])
+      })
+      .prefix('farmers')
   })
   .prefix('/api/v1')

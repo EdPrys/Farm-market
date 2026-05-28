@@ -4,10 +4,17 @@ export interface Category {
   slug: string
 }
 
+export interface SellerContacts {
+  phone: string | null
+  telegram: string | null
+  viber: string | null
+}
+
 export interface ProductSeller {
   id: number
   fullName: string | null
   farmName: string | null
+  contacts: SellerContacts | null
 }
 
 export interface Product {
