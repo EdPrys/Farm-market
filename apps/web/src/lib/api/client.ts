@@ -1,4 +1,4 @@
-import { authApi } from '../../features/auth/api'
+import { authApi } from '@/shared/auth/api'
 
 export const api = {
   auth: authApi,

@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Logo } from '../auth/logo'
-import { useCurrentUser } from '../auth/use-current-user'
-import { useLogout } from '../auth/use-logout'
-import { ProductCard } from '../catalog/product-card'
+import { Logo } from '@/shared/auth/logo'
+import { useCurrentUser } from '@/shared/auth/use-current-user'
+import { useLogout } from '@/shared/auth/use-logout'
+import { ProductCard } from '@/routes/catalog/-product-card'
 import { useFeaturedProducts } from './use-featured-products'
 
 const QUICK_CATEGORIES = [

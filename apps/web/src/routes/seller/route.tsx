@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
-import { AppLayout } from '../../features/layout/app-layout'
-import { useCurrentUser } from '../../features/auth/use-current-user'
+import { AppLayout } from '@/shared/layout/app-layout'
+import { useCurrentUser } from '@/shared/auth/use-current-user'
 
 function SellerGuard() {
   const { data: user, isLoading } = useCurrentUser()

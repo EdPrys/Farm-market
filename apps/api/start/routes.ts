@@ -18,7 +18,7 @@ router.get('/', () => {
   return { hello: 'world' }
 })
 
-router.get('/health', [controllers.Health, 'show'])
+router.get('/health', [controllers.health.Health, 'show'])
 
 router.get('/uploads/*', async ({ request, response }) => {
   const parts = request.param('*') as string[]
@@ -34,27 +34,27 @@ router.get('/uploads/*', async ({ request, response }) => {
 
 router
   .group(() => {
-    router.get('categories', [controllers.Categories, 'index'])
+    router.get('categories', [controllers.catalog.Categories, 'index'])
 
     router
       .group(() => {
-        router.get('/', [controllers.Products, 'index'])
-        router.get('/:id', [controllers.Products, 'show'])
+        router.get('/', [controllers.catalog.Products, 'index'])
+        router.get('/:id', [controllers.catalog.Products, 'show'])
       })
       .prefix('products')
 
     router
       .group(() => {
-        router.post('signup', [controllers.NewAccount, 'store'])
-        router.post('login', [controllers.AccessTokens, 'store'])
+        router.post('signup', [controllers.auth.NewAccount, 'store'])
+        router.post('login', [controllers.auth.AccessTokens, 'store'])
       })
       .prefix('auth')
       .as('auth')
 
     router
       .group(() => {
-        router.get('profile', [controllers.Profile, 'show'])
-        router.post('logout', [controllers.AccessTokens, 'destroy'])
+        router.get('profile', [controllers.account.Profile, 'show'])
+        router.post('logout', [controllers.auth.AccessTokens, 'destroy'])
       })
       .prefix('account')
       .as('profile')
@@ -62,14 +62,8 @@ router
 
     router
       .group(() => {
-        router.get('profile', [
-          () => import('#controllers/seller/seller_profile_controller'),
-          'show',
-        ])
-        router.put('profile', [
-          () => import('#controllers/seller/seller_profile_controller'),
-          'update',
-        ])
+        router.get('profile', [controllers.seller.SellerProfile, 'show'])
+        router.put('profile', [controllers.seller.SellerProfile, 'update'])
         router.get('products', [controllers.seller.SellerProducts, 'index'])
         router.post('products', [controllers.seller.SellerProducts, 'store'])
         router.put('products/:id', [controllers.seller.SellerProducts, 'update'])
@@ -81,7 +75,7 @@ router
 
     router
       .group(() => {
-        router.get('/:id', [() => import('#controllers/farmers_controller'), 'show'])
+        router.get('/:id', [controllers.farmers.Farmers, 'show'])
       })
       .prefix('farmers')
   })

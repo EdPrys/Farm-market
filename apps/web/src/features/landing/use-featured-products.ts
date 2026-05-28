@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { catalogApi } from '../catalog/api'
+import { catalogApi } from '@/routes/catalog/api'
 
 export function useFeaturedProducts() {
   return useQuery({
