@@ -1,4 +1,4 @@
-import { useParams } from '@tanstack/react-router'
+import { useParams, Link } from '@tanstack/react-router'
 import { useProduct } from './use-product'
 
 export function ProductPage() {
@@ -38,9 +38,13 @@ export function ProductPage() {
           </span>
         </p>
         <div className="text-sm text-gray-600">
-          <p className="font-medium">
+          <Link
+            to="/farmers/$id"
+            params={{ id: String(product.seller.id) }}
+            className="font-medium hover:text-green-700 hover:underline"
+          >
             {product.seller.farmName ?? product.seller.fullName ?? 'Продавець'}
-          </p>
+          </Link>
         </div>
         {product.description && (
           <p className="text-sm text-gray-700 leading-relaxed">{product.description}</p>
