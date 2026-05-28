@@ -2,7 +2,7 @@ import { apiFetch } from '../../lib/api/fetch-client'
 import type { Product } from '../catalog/types'
 
 export interface SellerProfile {
-  phones: string[]
+  phone: string | null
   telegram: string | null
   viber: string | null
 }

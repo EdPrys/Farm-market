@@ -67,7 +67,7 @@ export default class ProductsController {
             farmName: product.seller.farmName,
             contacts: isAuthenticated
               ? {
-                  phones: product.seller.phones ?? [],
+                  phone: product.seller.phone ?? null,
                   telegram: product.seller.telegram ?? null,
                   viber: product.seller.viber ?? null,
                 }

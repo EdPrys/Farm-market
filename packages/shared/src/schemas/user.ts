@@ -21,7 +21,7 @@ export type SignupInput = z.infer<typeof signupSchema>
 export type LoginInput = z.infer<typeof loginSchema>
 
 export const updateSellerProfileSchema = z.object({
-  phones: z.array(z.string().min(1).max(30)).max(5).optional(),
+  phone: z.string().max(30).nullable().optional(),
   telegram: z.string().max(100).nullable().optional(),
   viber: z.string().max(30).nullable().optional(),
 })

@@ -5,7 +5,7 @@ export interface Category {
 }
 
 export interface SellerContacts {
-  phones: string[]
+  phone: string | null
   telegram: string | null
   viber: string | null
 }

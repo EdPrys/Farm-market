@@ -17,7 +17,7 @@ export function ContactBlock({ contacts, isAuthenticated }: Props) {
     )
   }
 
-  if (!contacts || (contacts.phones.length === 0 && !contacts.telegram && !contacts.viber)) {
+  if (!contacts || (!contacts.phone && !contacts.telegram && !contacts.viber)) {
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-400">
         Продавець не вказав контакти
@@ -28,18 +28,17 @@ export function ContactBlock({ contacts, isAuthenticated }: Props) {
   return (
     <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex flex-col gap-2">
       <p className="text-xs font-semibold text-green-800 uppercase tracking-wide mb-1">
-        Зв'язатись з продавцем
+        {"Зв'язатись з продавцем"}
       </p>
-      {contacts.phones.map((phone) => (
+      {contacts.phone && (
         <a
-          key={phone}
-          href={`tel:${phone}`}
+          href={`tel:${contacts.phone}`}
           className="flex items-center gap-2 text-sm text-gray-700 hover:text-green-700"
         >
           <span className="text-base">📞</span>
-          {phone}
+          {contacts.phone}
         </a>
-      ))}
+      )}
       {contacts.telegram && (
         <a
           href={`https://t.me/${contacts.telegram.replace(/^@/, '')}`}

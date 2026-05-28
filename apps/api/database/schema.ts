@@ -77,7 +77,7 @@ export class ProductSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'farmName', 'fullName', 'id', 'isSeller', 'password', 'phones', 'telegram', 'updatedAt', 'viber'] as const
+  static $columns = ['createdAt', 'email', 'farmName', 'fullName', 'id', 'isSeller', 'password', 'phone', 'telegram', 'updatedAt', 'viber'] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -94,7 +94,7 @@ export class UserSchema extends BaseModel {
   @column({ serializeAs: null })
   declare password: string
   @column()
-  declare phones: string[]
+  declare phone: string | null
   @column()
   declare telegram: string | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })

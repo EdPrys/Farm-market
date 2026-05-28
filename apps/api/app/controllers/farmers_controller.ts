@@ -26,7 +26,11 @@ export default class FarmersController {
       farmName: farmer.farmName,
       memberSince: farmer.createdAt,
       contacts: isAuthenticated
-        ? { phones: farmer.phones ?? [], telegram: farmer.telegram, viber: farmer.viber }
+        ? {
+            phone: farmer.phone ?? null,
+            telegram: farmer.telegram ?? null,
+            viber: farmer.viber ?? null,
+          }
         : null,
       products: products.map((p) => ({
         id: p.id,

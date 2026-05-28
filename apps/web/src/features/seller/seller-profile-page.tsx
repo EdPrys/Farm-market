@@ -4,32 +4,16 @@ import { useSellerProfile } from './use-seller-profile'
 import { useUpdateSellerProfile } from './use-update-seller-profile'
 import type { SellerProfile } from './api'
 
-interface FormProps {
-  initial: SellerProfile
-}
-
-function SellerProfileForm({ initial }: FormProps) {
+function SellerProfileForm({ initial }: { initial: SellerProfile }) {
   const update = useUpdateSellerProfile()
-  const [phones, setPhones] = useState<string[]>(initial.phones.length > 0 ? initial.phones : [''])
+  const [phone, setPhone] = useState(initial.phone ?? '')
   const [telegram, setTelegram] = useState(initial.telegram ?? '')
   const [viber, setViber] = useState(initial.viber ?? '')
-
-  const addPhone = () => {
-    if (phones.length < 5) setPhones([...phones, ''])
-  }
-
-  const removePhone = (index: number) => {
-    setPhones(phones.filter((_, i) => i !== index))
-  }
-
-  const updatePhone = (index: number, value: string) => {
-    setPhones(phones.map((p, i) => (i === index ? value : p)))
-  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     update.mutate({
-      phones: phones.filter((p) => p.trim() !== ''),
+      phone: phone.trim() || null,
       telegram: telegram.trim() || null,
       viber: viber.trim() || null,
     })
@@ -37,38 +21,15 @@ function SellerProfileForm({ initial }: FormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <div className="flex flex-col gap-2">
-        <Label>Номери телефонів</Label>
-        {phones.map((phone, index) => (
-          <div key={index} className="flex gap-2">
-            <Input
-              type="tel"
-              placeholder="+380XXXXXXXXX"
-              value={phone}
-              onChange={(e) => updatePhone(index, e.target.value)}
-              className="flex-1"
-            />
-            {phones.length > 1 && (
-              <button
-                type="button"
-                onClick={() => removePhone(index)}
-                className="text-gray-400 hover:text-red-500 px-2 text-lg leading-none"
-                aria-label="Видалити номер"
-              >
-                ×
-              </button>
-            )}
-          </div>
-        ))}
-        {phones.length < 5 && (
-          <button
-            type="button"
-            onClick={addPhone}
-            className="text-sm text-green-700 hover:underline text-left w-fit"
-          >
-            + Додати номер
-          </button>
-        )}
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="phone">Номер телефону</Label>
+        <Input
+          id="phone"
+          type="tel"
+          placeholder="+380XXXXXXXXX"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
       </div>
 
       <div className="flex flex-col gap-1.5">

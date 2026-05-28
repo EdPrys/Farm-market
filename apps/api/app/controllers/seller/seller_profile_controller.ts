@@ -6,7 +6,7 @@ export default class SellerProfileController {
   async show({ auth, serialize }: HttpContext) {
     const seller = auth.getUserOrFail()
     return serialize.withoutWrapping({
-      phones: seller.phones ?? [],
+      phone: seller.phone ?? null,
       telegram: seller.telegram ?? null,
       viber: seller.viber ?? null,
     })
@@ -15,12 +15,12 @@ export default class SellerProfileController {
   async update({ auth, request, serialize }: HttpContext) {
     const seller = auth.getUserOrFail()
     const data = zodValidate(updateSellerProfileSchema, request.body())
-    if (data.phones !== undefined) seller.phones = data.phones
+    if (data.phone !== undefined) seller.phone = data.phone ?? null
     if (data.telegram !== undefined) seller.telegram = data.telegram ?? null
     if (data.viber !== undefined) seller.viber = data.viber ?? null
     await seller.save()
     return serialize.withoutWrapping({
-      phones: seller.phones ?? [],
+      phone: seller.phone ?? null,
       telegram: seller.telegram ?? null,
       viber: seller.viber ?? null,
     })
