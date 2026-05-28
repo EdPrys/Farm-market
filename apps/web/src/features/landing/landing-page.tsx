@@ -39,7 +39,7 @@ export function LandingPage() {
                 <button
                   onClick={() =>
                     void logout.mutate(undefined, {
-                      onSettled: () => void navigate({ to: '/catalog' }),
+                      onSettled: () => void navigate({ to: '/' }),
                     })
                   }
                   className="text-gray-700 hover:text-red-600"
