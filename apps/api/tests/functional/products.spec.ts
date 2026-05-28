@@ -1,8 +1,76 @@
 import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
+import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 import Category from '#models/category'
 import Product from '#models/product'
+
+async function seedProduct(name: string, categoryId: number, sellerId: number) {
+  await db.table('products').insert({
+    name,
+    price: '10',
+    unit: 'кг',
+    quantity: '5',
+    status: 'active',
+    category_id: categoryId,
+    seller_id: sellerId,
+    created_at: new Date(),
+    updated_at: new Date(),
+  })
+}
+
+test.group('GET /api/v1/products — limit + random', (group) => {
+  group.each.setup(() => testUtils.db().truncate())
+
+  test('respects limit param', async ({ client, assert }) => {
+    const [cat] = await db
+      .table('categories')
+      .insert({ name: 'Т', slug: 'test', created_at: new Date(), updated_at: new Date() })
+      .returning(['id'])
+    const [seller] = await db
+      .table('users')
+      .insert({
+        email: 'a@b.com',
+        password: 'x',
+        is_seller: true,
+        created_at: new Date(),
+        updated_at: new Date(),
+      })
+      .returning(['id'])
+
+    await seedProduct('A', cat.id, seller.id)
+    await seedProduct('B', cat.id, seller.id)
+    await seedProduct('C', cat.id, seller.id)
+
+    const response = await client.get('/api/v1/products?limit=2')
+    response.assertStatus(200)
+    const body = response.body() as { data: unknown[] }
+    assert.lengthOf(body.data, 2)
+  })
+
+  test('random param does not break the query', async ({ client }) => {
+    const [cat] = await db
+      .table('categories')
+      .insert({ name: 'Т', slug: 'test2', created_at: new Date(), updated_at: new Date() })
+      .returning(['id'])
+    const [seller] = await db
+      .table('users')
+      .insert({
+        email: 'c@d.com',
+        password: 'x',
+        is_seller: true,
+        created_at: new Date(),
+        updated_at: new Date(),
+      })
+      .returning(['id'])
+
+    await seedProduct('X', cat.id, seller.id)
+
+    const response = await client.get('/api/v1/products?random=true')
+    response.assertStatus(200)
+    response.assertBodyContains({ data: [{ name: 'X' }] })
+  })
+})
 
 test.group('GET /api/v1/products', (group) => {
   group.each.setup(() => testUtils.db().truncate())

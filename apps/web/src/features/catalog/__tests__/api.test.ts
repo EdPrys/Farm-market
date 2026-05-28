@@ -35,6 +35,20 @@ describe('catalogApi', () => {
       const [url] = mockFetch.mock.calls[0] as [string]
       expect(decodeURIComponent(url)).toContain('search=томати')
     })
+
+    it('appends limit param when provided', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ data: [] }) })
+      await catalogApi.getProducts({ limit: 8 })
+      const [url] = mockFetch.mock.calls[0] as [string]
+      expect(url).toContain('limit=8')
+    })
+
+    it('appends random=true when random is true', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ data: [] }) })
+      await catalogApi.getProducts({ random: true })
+      const [url] = mockFetch.mock.calls[0] as [string]
+      expect(url).toContain('random=true')
+    })
   })
 
   describe('getProduct', () => {
