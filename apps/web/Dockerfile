@@ -15,7 +15,7 @@ ENV VITE_API_URL=$VITE_API_URL
 
 WORKDIR /app/apps/web
 
-RUN pnpm build
+RUN pnpm exec vite build
 
 FROM nginx:alpine
 
