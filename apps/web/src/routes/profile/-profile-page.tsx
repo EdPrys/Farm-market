@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import { Button, Input, Label } from '@farm-market/ui'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
 import { useUpdateProfile } from './use-update-profile'
 import { useBecomeSeller } from './use-become-seller'
 
 export function ProfilePage() {
+  const navigate = useNavigate()
   const { data: user } = useCurrentUser()
   const updateProfile = useUpdateProfile()
   const becomeSeller = useBecomeSeller()
@@ -23,7 +25,10 @@ export function ProfilePage() {
 
   const handleBecomeSeller = (e: React.FormEvent) => {
     e.preventDefault()
-    becomeSeller.mutate({ isSeller: true, farmName: farmName.trim() })
+    becomeSeller.mutate(
+      { isSeller: true, farmName: farmName.trim() },
+      { onSuccess: () => void navigate({ to: '/seller/profile' }) }
+    )
   }
 
   return (
