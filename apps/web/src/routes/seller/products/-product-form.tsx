@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Button, Input, Label } from '@farm-market/ui'
 import { useCategories } from '../../catalog/use-categories'
 import type { Product } from '../../catalog/types'
@@ -25,6 +25,7 @@ export function ProductForm({ initial, onSubmit, onImageChange, isPending, error
     initial?.status ?? 'active',
   )
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const { data: categories = [] } = useCategories()
 
@@ -136,19 +137,44 @@ export function ProductForm({ initial, onSubmit, onImageChange, isPending, error
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="image">Фото</Label>
+        <Label>Фото</Label>
         <input
-          id="image"
+          ref={fileInputRef}
           type="file"
           accept="image/jpeg,image/png,image/webp"
+          className="hidden"
           onChange={(e) => {
             const file = e.target.files?.[0] ?? null
             setImageFile(file)
             onImageChange?.(file)
           }}
-          className="text-sm"
         />
-        {imageFile && <p className="text-xs text-gray-500">{imageFile.name}</p>}
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="flex items-center gap-3 border-2 border-dashed border-gray-300 rounded-lg px-4 py-3 text-sm text-gray-500 hover:border-green-500 hover:text-green-700 transition-colors w-full"
+        >
+          <span className="text-xl">📷</span>
+          <span>{imageFile ? imageFile.name : 'Оберіть фото товару'}</span>
+          {imageFile && (
+            <span
+              className="ml-auto text-gray-400 hover:text-red-500"
+              onClick={(e) => {
+                e.stopPropagation()
+                setImageFile(null)
+                onImageChange?.(null)
+                if (fileInputRef.current) fileInputRef.current.value = ''
+              }}
+            >
+              ✕
+            </span>
+          )}
+        </button>
+        {imageFile && (
+          <p className="text-xs text-gray-400">
+            {(imageFile.size / 1024).toFixed(0)} КБ
+          </p>
+        )}
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
