@@ -1,8 +1,0 @@
-[build]
-builder = "nixpacks"
-buildCommand = "pnpm install && node ace build"
-
-[deploy]
-startCommand = "node ace migration:run && node bin/server.js"
-healthcheckPath = "/health"
-healthcheckTimeout = 30
