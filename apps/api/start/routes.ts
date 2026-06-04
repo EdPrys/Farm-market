@@ -79,5 +79,19 @@ router
         router.get('/:id', [controllers.farmers.Farmers, 'show'])
       })
       .prefix('farmers')
+
+    router
+      .group(() => {
+        router.get('/', [controllers.chat.Conversations, 'index'])
+        router.post('/', [controllers.chat.Conversations, 'store'])
+
+        router
+          .group(() => {
+            router.get('messages', [controllers.chat.Messages, 'index'])
+          })
+          .prefix(':id')
+      })
+      .prefix('conversations')
+      .use(middleware.auth())
   })
   .prefix('/api/v1')

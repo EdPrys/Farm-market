@@ -13,10 +13,13 @@ import { Route as SignupRouteRouteImport } from './routes/signup/route'
 import { Route as SellerRouteRouteImport } from './routes/seller/route'
 import { Route as ProfileRouteRouteImport } from './routes/profile/route'
 import { Route as LoginRouteRouteImport } from './routes/login/route'
+import { Route as ChatRouteRouteImport } from './routes/chat/route'
 import { Route as CatalogRouteRouteImport } from './routes/catalog/route'
 import { Route as CartRouteRouteImport } from './routes/cart/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ChatIndexRouteImport } from './routes/chat/index'
+import { Route as ChatIdRouteImport } from './routes/chat/$id'
 import { Route as SellerProfileRouteRouteImport } from './routes/seller/profile/route'
 import { Route as ProductsIdRouteRouteImport } from './routes/products/$id/route'
 import { Route as FarmersIdRouteRouteImport } from './routes/farmers/$id/route'
@@ -45,6 +48,11 @@ const LoginRouteRoute = LoginRouteRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChatRouteRoute = ChatRouteRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CatalogRouteRoute = CatalogRouteRouteImport.update({
   id: '/catalog',
   path: '/catalog',
@@ -63,6 +71,16 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ChatIndexRoute = ChatIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ChatRouteRoute,
+} as any)
+const ChatIdRoute = ChatIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ChatRouteRoute,
 } as any)
 const SellerProfileRouteRoute = SellerProfileRouteRouteImport.update({
   id: '/profile',
@@ -106,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cart': typeof CartRouteRoute
   '/catalog': typeof CatalogRouteRoute
+  '/chat': typeof ChatRouteRouteWithChildren
   '/login': typeof LoginRouteRoute
   '/profile': typeof ProfileRouteRoute
   '/seller': typeof SellerRouteRouteWithChildren
@@ -114,6 +133,8 @@ export interface FileRoutesByFullPath {
   '/farmers/$id': typeof FarmersIdRouteRoute
   '/products/$id': typeof ProductsIdRouteRoute
   '/seller/profile': typeof SellerProfileRouteRoute
+  '/chat/$id': typeof ChatIdRoute
+  '/chat/': typeof ChatIndexRoute
   '/seller/products/new': typeof SellerProductsNewRouteRoute
   '/seller/products/': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRouteRoute
@@ -130,6 +151,8 @@ export interface FileRoutesByTo {
   '/farmers/$id': typeof FarmersIdRouteRoute
   '/products/$id': typeof ProductsIdRouteRoute
   '/seller/profile': typeof SellerProfileRouteRoute
+  '/chat/$id': typeof ChatIdRoute
+  '/chat': typeof ChatIndexRoute
   '/seller/products/new': typeof SellerProductsNewRouteRoute
   '/seller/products': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRouteRoute
@@ -140,6 +163,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/cart': typeof CartRouteRoute
   '/catalog': typeof CatalogRouteRoute
+  '/chat': typeof ChatRouteRouteWithChildren
   '/login': typeof LoginRouteRoute
   '/profile': typeof ProfileRouteRoute
   '/seller': typeof SellerRouteRouteWithChildren
@@ -148,6 +172,8 @@ export interface FileRoutesById {
   '/farmers/$id': typeof FarmersIdRouteRoute
   '/products/$id': typeof ProductsIdRouteRoute
   '/seller/profile': typeof SellerProfileRouteRoute
+  '/chat/$id': typeof ChatIdRoute
+  '/chat/': typeof ChatIndexRoute
   '/seller/products/new': typeof SellerProductsNewRouteRoute
   '/seller/products/': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRouteRoute
@@ -158,6 +184,7 @@ export interface FileRouteTypes {
     | '/'
     | '/cart'
     | '/catalog'
+    | '/chat'
     | '/login'
     | '/profile'
     | '/seller'
@@ -166,6 +193,8 @@ export interface FileRouteTypes {
     | '/farmers/$id'
     | '/products/$id'
     | '/seller/profile'
+    | '/chat/$id'
+    | '/chat/'
     | '/seller/products/new'
     | '/seller/products/'
     | '/seller/products/$id/edit'
@@ -182,6 +211,8 @@ export interface FileRouteTypes {
     | '/farmers/$id'
     | '/products/$id'
     | '/seller/profile'
+    | '/chat/$id'
+    | '/chat'
     | '/seller/products/new'
     | '/seller/products'
     | '/seller/products/$id/edit'
@@ -191,6 +222,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/cart'
     | '/catalog'
+    | '/chat'
     | '/login'
     | '/profile'
     | '/seller'
@@ -199,6 +231,8 @@ export interface FileRouteTypes {
     | '/farmers/$id'
     | '/products/$id'
     | '/seller/profile'
+    | '/chat/$id'
+    | '/chat/'
     | '/seller/products/new'
     | '/seller/products/'
     | '/seller/products/$id/edit'
@@ -209,6 +243,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   CartRouteRoute: typeof CartRouteRoute
   CatalogRouteRoute: typeof CatalogRouteRoute
+  ChatRouteRoute: typeof ChatRouteRouteWithChildren
   LoginRouteRoute: typeof LoginRouteRoute
   ProfileRouteRoute: typeof ProfileRouteRoute
   SellerRouteRoute: typeof SellerRouteRouteWithChildren
@@ -247,6 +282,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/catalog': {
       id: '/catalog'
       path: '/catalog'
@@ -274,6 +316,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/chat/': {
+      id: '/chat/'
+      path: '/'
+      fullPath: '/chat/'
+      preLoaderRoute: typeof ChatIndexRouteImport
+      parentRoute: typeof ChatRouteRoute
+    }
+    '/chat/$id': {
+      id: '/chat/$id'
+      path: '/$id'
+      fullPath: '/chat/$id'
+      preLoaderRoute: typeof ChatIdRouteImport
+      parentRoute: typeof ChatRouteRoute
     }
     '/seller/profile': {
       id: '/seller/profile'
@@ -338,6 +394,20 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface ChatRouteRouteChildren {
+  ChatIdRoute: typeof ChatIdRoute
+  ChatIndexRoute: typeof ChatIndexRoute
+}
+
+const ChatRouteRouteChildren: ChatRouteRouteChildren = {
+  ChatIdRoute: ChatIdRoute,
+  ChatIndexRoute: ChatIndexRoute,
+}
+
+const ChatRouteRouteWithChildren = ChatRouteRoute._addFileChildren(
+  ChatRouteRouteChildren,
+)
+
 interface SellerRouteRouteChildren {
   SellerProfileRouteRoute: typeof SellerProfileRouteRoute
   SellerProductsNewRouteRoute: typeof SellerProductsNewRouteRoute
@@ -361,6 +431,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   CartRouteRoute: CartRouteRoute,
   CatalogRouteRoute: CatalogRouteRoute,
+  ChatRouteRoute: ChatRouteRouteWithChildren,
   LoginRouteRoute: LoginRouteRoute,
   ProfileRouteRoute: ProfileRouteRoute,
   SellerRouteRoute: SellerRouteRouteWithChildren,

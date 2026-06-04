@@ -1,17 +1,26 @@
-import { useParams, Link } from '@tanstack/react-router'
+import { useParams, Link, useNavigate } from '@tanstack/react-router'
+import { useMutation } from '@tanstack/react-query'
 import { useProduct } from './use-product'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
 import { ContactBlock } from '../../farmers/$id/-contact-block'
 import { useCartStore } from '@/shared/cart/use-cart'
+import { chatApi } from '@/routes/chat/api'
 
 export function ProductPage() {
   const { id } = useParams({ strict: false }) as { id: string }
   const { data: product, isLoading, isError } = useProduct(Number(id))
   const { data: user } = useCurrentUser()
+  const navigate = useNavigate()
   const items = useCartStore((state) => state.items)
   const addItem = useCartStore((state) => state.addItem)
   const updateQuantity = useCartStore((state) => state.updateQuantity)
   const cartItem = product ? items.find((i) => i.productId === product.id) : undefined
+  const startChat = useMutation({
+    mutationFn: () => chatApi.createConversation(product!.seller.id),
+    onSuccess: (conversation) => {
+      void navigate({ to: '/chat/$id', params: { id: String(conversation.id) } })
+    },
+  })
 
   if (isLoading) return <div className="p-8 text-sm text-gray-500">Завантаження...</div>
   if (isError || !product) return <div className="p-8 text-sm text-red-500">Товар не знайдено</div>
@@ -104,6 +113,15 @@ export function ProductPage() {
           )
         )}
         <ContactBlock contacts={product.seller?.contacts ?? null} isAuthenticated={!!user} />
+        {user && user.id !== product.seller.id && (
+          <button
+            onClick={() => startChat.mutate()}
+            disabled={startChat.isPending}
+            className="w-full border border-green-700 text-green-700 rounded-lg py-3 text-sm font-semibold hover:bg-green-50 transition-colors disabled:opacity-50"
+          >
+            {startChat.isPending ? 'Відкриваємо...' : 'Написати продавцю'}
+          </button>
+        )}
       </div>
     </div>
   )

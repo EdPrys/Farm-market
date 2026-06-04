@@ -47,6 +47,12 @@ export function AppLayout({ children }: { children: ReactNode }) {
                   )}
                 </Link>
                 <Link
+                  to="/chat"
+                  className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
+                >
+                  Повідомлення
+                </Link>
+                <Link
                   to={user.isSeller ? '/seller/profile' : '/profile'}
                   className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
                 >

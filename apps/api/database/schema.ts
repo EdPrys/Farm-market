@@ -47,6 +47,40 @@ export class CategorySchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class ConversationSchema extends BaseModel {
+  static $columns = ['buyerId', 'createdAt', 'id', 'sellerId', 'updatedAt'] as const
+  $columns = ConversationSchema.$columns
+  @column()
+  declare buyerId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare sellerId: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
+export class MessageSchema extends BaseModel {
+  static $columns = ['conversationId', 'createdAt', 'id', 'readAt', 'senderId', 'text', 'updatedAt'] as const
+  $columns = MessageSchema.$columns
+  @column()
+  declare conversationId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column.dateTime()
+  declare readAt: DateTime | null
+  @column()
+  declare senderId: number
+  @column()
+  declare text: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class ProductSchema extends BaseModel {
   static $columns = ['categoryId', 'createdAt', 'description', 'id', 'imagePath', 'name', 'price', 'quantity', 'sellerId', 'status', 'unit', 'updatedAt'] as const
   $columns = ProductSchema.$columns
