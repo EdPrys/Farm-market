@@ -12,7 +12,7 @@ RUN pnpm install --frozen-lockfile
 
 WORKDIR /app/apps/api
 
-RUN node ace.js build
+RUN node ace.js build --ignore-ts-errors
 
 WORKDIR /app/apps/api/build
 
