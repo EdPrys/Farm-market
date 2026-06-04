@@ -26,3 +26,13 @@ export const updateSellerProfileSchema = z.object({
   viber: z.string().max(30).nullable().optional(),
 })
 export type UpdateSellerProfileInput = z.infer<typeof updateSellerProfileSchema>
+
+export const updateProfileSchema = z.object({
+  fullName: z.string().min(1).max(255).nullable().optional(),
+  isSeller: z.literal(true).optional(),
+  farmName: z.string().min(1).max(255).optional(),
+}).refine(
+  (data) => !data.isSeller || !!data.farmName,
+  { message: 'farmName is required when registering as seller', path: ['farmName'] }
+)
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>
