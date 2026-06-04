@@ -16,7 +16,7 @@ RUN node ace.js build --ignore-ts-errors
 
 WORKDIR /app/apps/api/build
 
-RUN CI=true pnpm install --prod
+RUN CI=true pnpm install --prod --ignore-scripts
 
 EXPOSE 3333
 
