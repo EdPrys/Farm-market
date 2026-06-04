@@ -1,17 +1,20 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
-  import { useState, useEffect, useRef } from 'react'
-  import { AppLayout } from '@/shared/layout/app-layout'
-  import { useMessages } from './use-messages'
-  import { useSocket } from '@/shared/socket/use-socket'
-  import { useCurrentUser } from '@/shared/auth/use-current-user'
-  import type { ChatMessage } from './api'
+import { useState, useEffect, useRef } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { AppLayout } from '@/shared/layout/app-layout'
+import { useMessages } from './use-messages'
+import { useSocket } from '@/shared/socket/use-socket'
+import { useCurrentUser } from '@/shared/auth/use-current-user'
+import { chatApi } from './api'
+import type { ChatMessage } from './api'
 
-  function ConversationPage() {
+function ConversationPage() {
     const { id } = useParams({ strict: false }) as { id: string }
     const conversationId = Number(id)
     const { data: user } = useCurrentUser()
     const { data: initial = [], isLoading } = useMessages(conversationId)
     const socket = useSocket()
+    const queryClient = useQueryClient()
     const [messages, setMessages] = useState<ChatMessage[]>([])
     const [text, setText] = useState('')
     const bottomRef = useRef<HTMLDivElement>(null)
@@ -21,16 +24,27 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
       setMessages(initial)
     }, [initial])
 
+    // Помічаємо повідомлення як прочитані при відкритті розмови
+    useEffect(() => {
+      chatApi.markRead(conversationId).then(() => {
+        void queryClient.invalidateQueries({ queryKey: ['conversations', 'unread-count'] })
+      })
+    }, [conversationId, queryClient])
+
     useEffect(() => {
       if (!socket) return
       socket.emit('join', { conversationId })
       socket.on('new_message', (msg: ChatMessage) => {
         setMessages((prev) => [...prev, msg])
+        // Помічаємо як прочитане одразу якщо розмова відкрита
+        chatApi.markRead(conversationId).then(() => {
+          void queryClient.invalidateQueries({ queryKey: ['conversations', 'unread-count'] })
+        })
       })
       return () => {
         socket.off('new_message')
       }
-    }, [socket, conversationId])
+    }, [socket, conversationId, queryClient])
 
     useEffect(() => {
       bottomRef.current?.scrollIntoView({ behavior: 'smooth' })

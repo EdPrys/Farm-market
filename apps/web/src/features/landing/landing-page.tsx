@@ -4,6 +4,7 @@ import { Logo } from '@/shared/auth/logo'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
 import { useLogout } from '@/shared/auth/use-logout'
 import { useCartStore } from '@/shared/cart/use-cart'
+import { useUnreadCount } from '@/routes/chat/use-unread-count'
 import { ProductCard } from '@/routes/catalog/-product-card'
 import { useFeaturedProducts } from './use-featured-products'
 
@@ -21,6 +22,7 @@ export function LandingPage() {
   const [search, setSearch] = useState('')
   const { data: products = [] } = useFeaturedProducts()
   const cartCount = useCartStore((state) => state.items.length)
+  const { data: unread } = useUnreadCount()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,8 +53,13 @@ export function LandingPage() {
                     </span>
                   )}
                 </Link>
-                <Link to="/chat" className="text-gray-700 hover:text-green-700">
+                <Link to="/chat" className="relative text-gray-700 hover:text-green-700">
                   Повідомлення
+                  {!!unread?.count && unread.count > 0 && (
+                    <span className="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                      {unread.count > 9 ? '9+' : unread.count}
+                    </span>
+                  )}
                 </Link>
                 <Link
                   to={user.isSeller ? '/seller/profile' : '/profile'}

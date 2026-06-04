@@ -7,6 +7,7 @@
     buyer: { id: number; fullName: string | null; email: string }
     seller: { id: number; fullName: string | null; farmName: string | null; email: string }
     messages: ChatMessage[]
+    unreadCount: number
     createdAt: string
     updatedAt: string
   }
@@ -32,4 +33,7 @@
 
     getMessages: (conversationId: number) =>
       apiFetch<ChatMessage[]>(`/api/v1/conversations/${conversationId}/messages`),
+
+    markRead: (conversationId: number) =>
+      apiFetch<void>(`/api/v1/conversations/${conversationId}/read`, { method: 'PATCH' }),
   }

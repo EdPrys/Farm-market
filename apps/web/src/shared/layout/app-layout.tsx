@@ -4,12 +4,14 @@ import { Logo } from '../auth/logo'
 import { useCurrentUser } from '../auth/use-current-user'
 import { useLogout } from '../auth/use-logout'
 import { useCartStore } from '@/shared/cart/use-cart'
+import { useUnreadCount } from '@/routes/chat/use-unread-count'
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const { data: user } = useCurrentUser()
   const logout = useLogout()
   const navigate = useNavigate()
   const cartCount = useCartStore((state) => state.items.length)
+  const { data: unread } = useUnreadCount()
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -48,9 +50,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 </Link>
                 <Link
                   to="/chat"
-                  className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
+                  className="relative text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
                 >
                   Повідомлення
+                  {!!unread?.count && unread.count > 0 && (
+                    <span className="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                      {unread.count > 9 ? '9+' : unread.count}
+                    </span>
+                  )}
                 </Link>
                 <Link
                   to={user.isSeller ? '/seller/profile' : '/profile'}

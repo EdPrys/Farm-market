@@ -12,9 +12,15 @@ export default class ConversationsController {
       .preload('buyer')
       .preload('seller')
       .preload('messages', (q) => q.orderBy('created_at', 'desc').limit(1))
+      .withCount('messages', (q) => q.whereNull('read_at').whereNot('sender_id', user.id))
       .orderBy('updated_at', 'desc')
 
-    return serialize.withoutWrapping(conversations.map((c) => c.serialize()))
+    return serialize.withoutWrapping(
+      conversations.map((c) => ({
+        ...c.serialize(),
+        unreadCount: Number(c.$extras.messagesCount ?? c.$extras.messages_count ?? 0),
+      }))
+    )
   }
   async store({ auth, request, serialize }: HttpContext) {
     // POST /api/v1/conversations — знайти або створити розмов
@@ -36,5 +42,20 @@ export default class ConversationsController {
     })
 
     return serialize.withoutWrapping(conversation.serialize())
+  }
+
+  // GET /api/v1/conversations/unread-count
+  async unreadCount({ auth, serialize }: HttpContext) {
+    const user = auth.getUserOrFail()
+
+    const result = await Conversation.query()
+      .where((q) => q.where('buyer_id', user.id).orWhere('seller_id', user.id))
+      .whereHas('messages', (q) => {
+        q.whereNull('read_at').whereNot('sender_id', user.id)
+      })
+      .count('* as total')
+
+    const count = Number((result[0] as any).$extras.total)
+    return serialize.withoutWrapping({ count })
   }
 }

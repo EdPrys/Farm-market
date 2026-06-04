@@ -84,10 +84,12 @@ router
       .group(() => {
         router.get('/', [controllers.chat.Conversations, 'index'])
         router.post('/', [controllers.chat.Conversations, 'store'])
+        router.get('unread-count', [controllers.chat.Conversations, 'unreadCount'])
 
         router
           .group(() => {
             router.get('messages', [controllers.chat.Messages, 'index'])
+            router.patch('read', [controllers.chat.Messages, 'markRead'])
           })
           .prefix(':id')
       })
