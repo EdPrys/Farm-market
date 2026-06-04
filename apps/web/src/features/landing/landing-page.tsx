@@ -36,6 +36,20 @@ export function LandingPage() {
                 <Link to="/catalog" className="text-gray-700 hover:text-green-700">
                   Каталог
                 </Link>
+                {user.isSeller && (
+                  <Link to="/seller/products" className="text-gray-700 hover:text-green-700">
+                    Мої товари
+                  </Link>
+                )}
+                <button className="text-gray-400 cursor-not-allowed" disabled>
+                  Кошик
+                </button>
+                <Link
+                  to={user.isSeller ? '/seller/profile' : '/profile'}
+                  className="text-gray-700 hover:text-green-700"
+                >
+                  Профіль
+                </Link>
                 <button
                   onClick={() =>
                     void logout.mutate(undefined, {
