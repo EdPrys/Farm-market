@@ -14,7 +14,8 @@ import { useEffect } from 'react'
       }
 
       if (!socketInstance) {
-        socketInstance = io('http://localhost:3333', {
+        const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3333'
+        socketInstance = io(apiUrl, {
           auth: { token },
         })
       }

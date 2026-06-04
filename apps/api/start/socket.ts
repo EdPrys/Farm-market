@@ -9,9 +9,10 @@ import { Secret } from '@adonisjs/core/helpers'
 export let io: Server
 
 app.ready(async () => {
+  const corsOrigin = process.env.CORS_ORIGIN?.split(',') ?? ['http://localhost:5173']
   io = new Server(server.getNodeServer(), {
     cors: {
-      origin: 'http://localhost:5173',
+      origin: corsOrigin,
       credentials: true,
     },
   })
