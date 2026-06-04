@@ -24,31 +24,31 @@ export function AppLayout({ children }: { children: ReactNode }) {
               Каталог
             </Link>
             {user?.isSeller && (
+              <Link
+                to="/seller/products"
+                className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
+              >
+                Мої товари
+              </Link>
+            )}
+            {user && (
               <>
+                <button className="text-gray-400 cursor-not-allowed" disabled>
+                  Кошик
+                </button>
                 <Link
-                  to="/seller/products"
-                  className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
-                >
-                  Мої товари
-                </Link>
-                <Link
-                  to="/seller/profile"
+                  to={user.isSeller ? '/seller/profile' : ('/profile' as string)}
                   className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
                 >
                   Профіль
                 </Link>
+                <button
+                  onClick={() => void logout.mutate(undefined, { onSettled: () => void navigate({ to: '/' }) })}
+                  className="text-gray-700 hover:text-red-600"
+                >
+                  Вийти
+                </button>
               </>
-            )}
-            <button className="text-gray-400 cursor-not-allowed" disabled>
-              Кошик
-            </button>
-            {user && (
-              <button
-                onClick={() => void logout.mutate(undefined, { onSettled: () => void navigate({ to: '/' }) })}
-                className="text-gray-700 hover:text-red-600"
-              >
-                Вийти
-              </button>
             )}
           </nav>
         </div>
