@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Input, Label } from '@farm-market/ui'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
 import { useUpdateProfile } from './use-update-profile'
@@ -8,8 +8,13 @@ export function ProfilePage() {
   const { data: user } = useCurrentUser()
   const updateProfile = useUpdateProfile()
   const becomeSeller = useBecomeSeller()
-  const [fullName, setFullName] = useState(user?.fullName ?? '')
+  const [fullName, setFullName] = useState('')
   const [farmName, setFarmName] = useState('')
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (user?.fullName != null) setFullName(user.fullName)
+  }, [user?.fullName])
 
   const handleUpdateProfile = (e: React.FormEvent) => {
     e.preventDefault()
