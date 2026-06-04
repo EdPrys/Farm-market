@@ -3,11 +3,13 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { Logo } from '../auth/logo'
 import { useCurrentUser } from '../auth/use-current-user'
 import { useLogout } from '../auth/use-logout'
+import { useCartStore } from '@/shared/cart/use-cart'
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const { data: user } = useCurrentUser()
   const logout = useLogout()
   const navigate = useNavigate()
+  const cartCount = useCartStore((state) => state.items.length)
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -33,9 +35,17 @@ export function AppLayout({ children }: { children: ReactNode }) {
             )}
             {user && (
               <>
-                <button className="text-gray-400 cursor-not-allowed" disabled>
+                <Link
+                  to="/cart"
+                  className="relative text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
+                >
                   Кошик
-                </button>
+                  {cartCount > 0 && (
+                    <span className="absolute -top-2 -right-3 bg-green-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                      {cartCount > 9 ? '9+' : cartCount}
+                    </span>
+                  )}
+                </Link>
                 <Link
                   to={user.isSeller ? '/seller/profile' : '/profile'}
                   className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"

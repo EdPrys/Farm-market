@@ -14,6 +14,7 @@ import { Route as SellerRouteRouteImport } from './routes/seller/route'
 import { Route as ProfileRouteRouteImport } from './routes/profile/route'
 import { Route as LoginRouteRouteImport } from './routes/login/route'
 import { Route as CatalogRouteRouteImport } from './routes/catalog/route'
+import { Route as CartRouteRouteImport } from './routes/cart/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SellerProfileRouteRouteImport } from './routes/seller/profile/route'
@@ -47,6 +48,11 @@ const LoginRouteRoute = LoginRouteRouteImport.update({
 const CatalogRouteRoute = CatalogRouteRouteImport.update({
   id: '/catalog',
   path: '/catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRouteRoute = CartRouteRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -98,6 +104,7 @@ const SellerProductsIdEditRouteRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cart': typeof CartRouteRoute
   '/catalog': typeof CatalogRouteRoute
   '/login': typeof LoginRouteRoute
   '/profile': typeof ProfileRouteRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cart': typeof CartRouteRoute
   '/catalog': typeof CatalogRouteRoute
   '/login': typeof LoginRouteRoute
   '/profile': typeof ProfileRouteRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/cart': typeof CartRouteRoute
   '/catalog': typeof CatalogRouteRoute
   '/login': typeof LoginRouteRoute
   '/profile': typeof ProfileRouteRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/cart'
     | '/catalog'
     | '/login'
     | '/profile'
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/cart'
     | '/catalog'
     | '/login'
     | '/profile'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/cart'
     | '/catalog'
     | '/login'
     | '/profile'
@@ -195,6 +207,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  CartRouteRoute: typeof CartRouteRoute
   CatalogRouteRoute: typeof CatalogRouteRoute
   LoginRouteRoute: typeof LoginRouteRoute
   ProfileRouteRoute: typeof ProfileRouteRoute
@@ -239,6 +252,13 @@ declare module '@tanstack/react-router' {
       path: '/catalog'
       fullPath: '/catalog'
       preLoaderRoute: typeof CatalogRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -339,6 +359,7 @@ const SellerRouteRouteWithChildren = SellerRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  CartRouteRoute: CartRouteRoute,
   CatalogRouteRoute: CatalogRouteRoute,
   LoginRouteRoute: LoginRouteRoute,
   ProfileRouteRoute: ProfileRouteRoute,

@@ -1,11 +1,39 @@
 import { Link } from '@tanstack/react-router'
 import type { Product } from './types'
+import { useCartStore } from '@/shared/cart/use-cart'
+import { useCurrentUser } from '@/shared/auth/use-current-user'
 
 interface Props {
   product: Product
 }
 
 export function ProductCard({ product }: Props) {
+  const { data: user } = useCurrentUser()
+  const items = useCartStore((state) => state.items)
+  const addItem = useCartStore((state) => state.addItem)
+  const updateQuantity = useCartStore((state) => state.updateQuantity)
+  const cartItem = items.find((i) => i.productId === product.id)
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    addItem({
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      unit: product.unit,
+      imagePath: product.imagePath,
+      sellerName: product.seller.farmName ?? product.seller.fullName ?? '',
+      sellerId: product.seller.id,
+    })
+  }
+
+  const handleQty = (e: React.MouseEvent, qty: number) => {
+    e.preventDefault()
+    e.stopPropagation()
+    updateQuantity(product.id, qty)
+  }
+
   return (
     <Link
       to="/products/$id"
@@ -27,12 +55,35 @@ export function ProductCard({ product }: Props) {
         <p className="text-sm font-bold text-green-700 mt-1">
           {product.price} ₴ / {product.unit}
         </p>
-        <button
-          disabled
-          className="mt-2 w-full text-xs border border-gray-200 rounded py-1 text-gray-400 cursor-not-allowed"
-        >
-          До кошика
-        </button>
+        {user && (
+          cartItem ? (
+            <div
+              className="mt-2 flex items-center justify-between border border-green-200 rounded py-1 px-2"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
+            >
+              <button
+                onClick={(e) => handleQty(e, cartItem.quantity - 1)}
+                className="text-green-700 font-bold w-5 text-center"
+              >
+                −
+              </button>
+              <span className="text-sm font-medium">{cartItem.quantity}</span>
+              <button
+                onClick={(e) => handleQty(e, cartItem.quantity + 1)}
+                className="text-green-700 font-bold w-5 text-center"
+              >
+                +
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleAdd}
+              className="mt-2 w-full text-xs border border-green-600 text-green-700 rounded py-1 hover:bg-green-50 transition-colors"
+            >
+              До кошика
+            </button>
+          )
+        )}
       </div>
     </Link>
   )

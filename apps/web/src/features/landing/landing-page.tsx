@@ -3,6 +3,7 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { Logo } from '@/shared/auth/logo'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
 import { useLogout } from '@/shared/auth/use-logout'
+import { useCartStore } from '@/shared/cart/use-cart'
 import { ProductCard } from '@/routes/catalog/-product-card'
 import { useFeaturedProducts } from './use-featured-products'
 
@@ -19,6 +20,7 @@ export function LandingPage() {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const { data: products = [] } = useFeaturedProducts()
+  const cartCount = useCartStore((state) => state.items.length)
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,9 +43,14 @@ export function LandingPage() {
                     Мої товари
                   </Link>
                 )}
-                <button className="text-gray-400 cursor-not-allowed" disabled>
+                <Link to="/cart" className="relative text-gray-700 hover:text-green-700">
                   Кошик
-                </button>
+                  {cartCount > 0 && (
+                    <span className="absolute -top-2 -right-3 bg-green-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                      {cartCount > 9 ? '9+' : cartCount}
+                    </span>
+                  )}
+                </Link>
                 <Link
                   to={user.isSeller ? '/seller/profile' : '/profile'}
                   className="text-gray-700 hover:text-green-700"
