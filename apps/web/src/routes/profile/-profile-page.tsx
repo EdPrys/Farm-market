@@ -1,0 +1,96 @@
+import { useState } from 'react'
+import { Button, Input, Label } from '@farm-market/ui'
+import { useCurrentUser } from '@/shared/auth/use-current-user'
+import { useUpdateProfile } from './use-update-profile'
+import { useBecomeSeller } from './use-become-seller'
+
+export function ProfilePage() {
+  const { data: user } = useCurrentUser()
+  const updateProfile = useUpdateProfile()
+  const becomeSeller = useBecomeSeller()
+  const [fullName, setFullName] = useState(user?.fullName ?? '')
+  const [farmName, setFarmName] = useState('')
+
+  const handleUpdateProfile = (e: React.FormEvent) => {
+    e.preventDefault()
+    updateProfile.mutate({ fullName: fullName.trim() || null })
+  }
+
+  const handleBecomeSeller = (e: React.FormEvent) => {
+    e.preventDefault()
+    becomeSeller.mutate({ isSeller: true, farmName: farmName.trim() })
+  }
+
+  return (
+    <div className="max-w-lg mx-auto px-4 py-8 flex flex-col gap-10">
+      <section className="flex flex-col gap-5">
+        <h1 className="text-xl font-bold text-gray-900">Особиста інформація</h1>
+        <form onSubmit={handleUpdateProfile} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="fullName">Імʼя та прізвище</Label>
+            <Input
+              id="fullName"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Іван Петренко"
+            />
+          </div>
+          {updateProfile.isError && (
+            <p className="text-sm text-red-500">
+              {updateProfile.error instanceof Error
+                ? updateProfile.error.message
+                : 'Помилка збереження'}
+            </p>
+          )}
+          {updateProfile.isSuccess && (
+            <p className="text-sm text-green-600">Збережено</p>
+          )}
+          <Button type="submit" disabled={updateProfile.isPending}>
+            {updateProfile.isPending ? 'Збереження...' : 'Зберегти'}
+          </Button>
+        </form>
+      </section>
+
+      {!user?.isSeller && (
+        <section className="flex flex-col gap-5">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Стати продавцем</h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Вкажіть назву господарства — після цього зможете додавати товари.
+            </p>
+          </div>
+          <form onSubmit={handleBecomeSeller} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="farmName">Назва господарства</Label>
+              <Input
+                id="farmName"
+                value={farmName}
+                onChange={(e) => setFarmName(e.target.value)}
+                placeholder="Ферма Петренко"
+                required
+              />
+            </div>
+            {becomeSeller.isError && (
+              <p className="text-sm text-red-500">
+                {becomeSeller.error instanceof Error
+                  ? becomeSeller.error.message
+                  : 'Помилка реєстрації'}
+              </p>
+            )}
+            {becomeSeller.isSuccess && (
+              <p className="text-sm text-green-600">
+                Вітаємо! Тепер ви можете додавати товари.
+              </p>
+            )}
+            <Button
+              type="submit"
+              disabled={becomeSeller.isPending || !farmName.trim()}
+            >
+              {becomeSeller.isPending ? 'Реєстрація...' : 'Зареєструватись як продавець'}
+            </Button>
+          </form>
+        </section>
+      )}
+    </div>
+  )
+}

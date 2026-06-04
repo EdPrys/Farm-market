@@ -37,7 +37,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                   Кошик
                 </button>
                 <Link
-                  to={user.isSeller ? '/seller/profile' : ('/profile' as string)}
+                  to={user.isSeller ? '/seller/profile' : '/profile'}
                   className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
                 >
                   Профіль
