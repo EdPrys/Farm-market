@@ -140,6 +140,21 @@ export class MessageSchema extends BaseModel {
   declare updatedAt: DateTime
 }
 
+export class PasswordResetTokenSchema extends BaseModel {
+  static $columns = ['createdAt', 'expiresAt', 'id', 'token', 'userId'] as const
+  $columns = PasswordResetTokenSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column.dateTime()
+  declare expiresAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare token: string
+  @column()
+  declare userId: number
+}
+
 export class ProductSchema extends BaseModel {
   static $columns = ['categoryId', 'createdAt', 'description', 'id', 'imagePath', 'name', 'price', 'quantity', 'sellerId', 'status', 'unit', 'updatedAt'] as const
   $columns = ProductSchema.$columns
