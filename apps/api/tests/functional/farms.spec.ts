@@ -124,4 +124,25 @@ test.group('GET /api/v1/farms/:id', (group) => {
     response.assertStatus(200)
     assert.lengthOf(response.body().products, 0)
   })
+
+  test('includes avgRating and reviewCount', async ({ client, assert }) => {
+    const { seller, farm } = await createSellerWithFarm()
+    await db.table('farm_reviews').insert([
+      { farm_id: farm.id, user_id: seller.id, rating: 4, text: 'A', created_at: new Date() },
+      { farm_id: farm.id, user_id: seller.id, rating: 5, text: 'B', created_at: new Date() },
+    ])
+
+    const response = await client.get(`/api/v1/farms/${farm.id}`)
+    response.assertStatus(200)
+    assert.equal(response.body().reviewCount, 2)
+    assert.equal(response.body().avgRating, 4.5)
+  })
+
+  test('returns reviewCount 0 and null avgRating when no reviews', async ({ client, assert }) => {
+    const { farm } = await createSellerWithFarm()
+    const response = await client.get(`/api/v1/farms/${farm.id}`)
+    response.assertStatus(200)
+    assert.equal(response.body().reviewCount, 0)
+    assert.isNull(response.body().avgRating)
+  })
 })

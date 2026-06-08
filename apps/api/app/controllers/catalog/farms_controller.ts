@@ -73,6 +73,17 @@ export default class FarmsController {
         : null,
     }))
 
+    const [reviewStats] = await db
+      .from('farm_reviews')
+      .where('farm_id', farmId)
+      .count('* as review_count')
+      .avg('rating as avg_rating')
+
+    farm.$extras.reviewCount = Number(reviewStats.review_count)
+    farm.$extras.avgRating = reviewStats.avg_rating
+      ? Number(Number(reviewStats.avg_rating).toFixed(1))
+      : null
+
     return serialize.withoutWrapping(FarmTransformer.transform(farm))
   }
 }
