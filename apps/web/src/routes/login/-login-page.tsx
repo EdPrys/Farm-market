@@ -45,7 +45,9 @@ export function LoginPage() {
             />
           </div>
           <div className="text-right -mt-1">
-            <span className="text-sm text-primary font-medium cursor-default">Забули пароль?</span>
+            <Link to="/forgot-password" className="text-sm text-primary font-medium hover:underline">
+              Забули пароль?
+            </Link>
           </div>
           {login.isError && (
             <p className="text-sm text-destructive">
