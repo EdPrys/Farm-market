@@ -75,6 +75,10 @@ router
       .group(() => {
         router.get('/', [controllers.catalog.Farms, 'index'])
         router.get('/:id', [controllers.catalog.Farms, 'show'])
+        router.get('/:id/reviews', [controllers.catalog.FarmReviews, 'index'])
+        router
+          .post('/:id/reviews', [controllers.catalog.FarmReviews, 'store'])
+          .use(middleware.auth())
       })
       .prefix('farms')
 
