@@ -12,6 +12,7 @@ export default class extends BaseSeeder {
       { name: 'Мед та варення', slug: 'honey', created_at: new Date(), updated_at: new Date() },
       { name: 'Зелень та трави', slug: 'herbs', created_at: new Date(), updated_at: new Date() },
       { name: 'Екзотика', slug: 'exotic', created_at: new Date(), updated_at: new Date() },
+      { name: 'Риба і морепродукти', slug: 'fish', created_at: new Date(), updated_at: new Date() },
     ])
   }
 }

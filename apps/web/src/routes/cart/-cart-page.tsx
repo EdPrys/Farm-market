@@ -31,13 +31,17 @@ export function CartPage() {
             key={item.productId}
             className="flex items-center gap-4 border rounded-xl p-4 bg-white"
           >
-            <div className="flex-1 min-w-0">
+            <Link
+              to="/products/$id"
+              params={{ id: String(item.productId) }}
+              className="flex-1 min-w-0 hover:opacity-75 transition-opacity"
+            >
               <p className="font-medium text-gray-900 truncate">{item.name}</p>
               <p className="text-xs text-gray-500 mt-0.5">{item.sellerName}</p>
               <p className="text-sm text-green-700 mt-1">
                 {item.price} ₴ / {item.unit}
               </p>
-            </div>
+            </Link>
             <div className="flex items-center gap-1 shrink-0">
               <button
                 onClick={() => updateQuantity(item.productId, item.quantity - 1)}
@@ -73,13 +77,6 @@ export function CartPage() {
           </span>
           <span className="font-bold text-gray-900 text-lg">{total.toFixed(2)} ₴</span>
         </div>
-        <button
-          disabled
-          className="w-full bg-gray-100 text-gray-400 rounded-lg py-3 text-sm cursor-not-allowed"
-          title="Скоро"
-        >
-          Оформити замовлення (скоро)
-        </button>
       </div>
     </div>
   )
