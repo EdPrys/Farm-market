@@ -5,10 +5,12 @@ export async function sendEmail({
   to,
   subject,
   text,
+  html,
 }: {
   to: string
   subject: string
   text: string
+  html?: string
 }) {
   const apiKey = process.env.RESEND_API_KEY!
   const from = process.env.MAIL_FROM!
@@ -19,7 +21,7 @@ export async function sendEmail({
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ from, to, subject, text }),
+    body: JSON.stringify({ from, to, subject, text, ...(html ? { html } : {}) }),
   })
 
   if (!response.ok) {
