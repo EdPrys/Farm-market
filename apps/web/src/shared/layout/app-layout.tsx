@@ -27,12 +27,26 @@ export function AppLayout({ children }: { children: ReactNode }) {
             >
               Каталог
             </Link>
+            <Link
+              to="/farms"
+              className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
+            >
+              Ферми
+            </Link>
             {user?.isSeller && (
               <Link
                 to="/seller/products"
                 className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
               >
                 Мої товари
+              </Link>
+            )}
+            {user?.isSeller && (
+              <Link
+                to="/seller/farm"
+                className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
+              >
+                Моя ферма
               </Link>
             )}
             {user && (

@@ -18,13 +18,16 @@ import { Route as CatalogRouteRouteImport } from './routes/catalog/route'
 import { Route as CartRouteRouteImport } from './routes/cart/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FarmsIndexRouteImport } from './routes/farms/index'
 import { Route as ChatIndexRouteImport } from './routes/chat/index'
 import { Route as ChatIdRouteImport } from './routes/chat/$id'
 import { Route as SellerProfileRouteRouteImport } from './routes/seller/profile/route'
 import { Route as ProductsIdRouteRouteImport } from './routes/products/$id/route'
+import { Route as FarmsIdRouteRouteImport } from './routes/farms/$id/route'
 import { Route as FarmersIdRouteRouteImport } from './routes/farmers/$id/route'
 import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
 import { Route as SellerProductsIndexRouteImport } from './routes/seller/products/index'
+import { Route as SellerFarmIndexRouteImport } from './routes/seller/farm/index'
 import { Route as SellerProductsNewRouteRouteImport } from './routes/seller/products/new/route'
 import { Route as SellerProductsIdEditRouteRouteImport } from './routes/seller/products/$id/edit/route'
 
@@ -72,6 +75,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FarmsIndexRoute = FarmsIndexRouteImport.update({
+  id: '/farms/',
+  path: '/farms/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChatIndexRoute = ChatIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -92,6 +100,11 @@ const ProductsIdRouteRoute = ProductsIdRouteRouteImport.update({
   path: '/products/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FarmsIdRouteRoute = FarmsIdRouteRouteImport.update({
+  id: '/farms/$id',
+  path: '/farms/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FarmersIdRouteRoute = FarmersIdRouteRouteImport.update({
   id: '/farmers/$id',
   path: '/farmers/$id',
@@ -106,6 +119,11 @@ const AuthenticatedDashboardRouteRoute =
 const SellerProductsIndexRoute = SellerProductsIndexRouteImport.update({
   id: '/products/',
   path: '/products/',
+  getParentRoute: () => SellerRouteRoute,
+} as any)
+const SellerFarmIndexRoute = SellerFarmIndexRouteImport.update({
+  id: '/farm/',
+  path: '/farm/',
   getParentRoute: () => SellerRouteRoute,
 } as any)
 const SellerProductsNewRouteRoute = SellerProductsNewRouteRouteImport.update({
@@ -131,11 +149,14 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRouteRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRoute
   '/farmers/$id': typeof FarmersIdRouteRoute
+  '/farms/$id': typeof FarmsIdRouteRoute
   '/products/$id': typeof ProductsIdRouteRoute
   '/seller/profile': typeof SellerProfileRouteRoute
   '/chat/$id': typeof ChatIdRoute
   '/chat/': typeof ChatIndexRoute
+  '/farms/': typeof FarmsIndexRoute
   '/seller/products/new': typeof SellerProductsNewRouteRoute
+  '/seller/farm/': typeof SellerFarmIndexRoute
   '/seller/products/': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRouteRoute
 }
@@ -149,11 +170,14 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRouteRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRoute
   '/farmers/$id': typeof FarmersIdRouteRoute
+  '/farms/$id': typeof FarmsIdRouteRoute
   '/products/$id': typeof ProductsIdRouteRoute
   '/seller/profile': typeof SellerProfileRouteRoute
   '/chat/$id': typeof ChatIdRoute
   '/chat': typeof ChatIndexRoute
+  '/farms': typeof FarmsIndexRoute
   '/seller/products/new': typeof SellerProductsNewRouteRoute
+  '/seller/farm': typeof SellerFarmIndexRoute
   '/seller/products': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRouteRoute
 }
@@ -170,11 +194,14 @@ export interface FileRoutesById {
   '/signup': typeof SignupRouteRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRoute
   '/farmers/$id': typeof FarmersIdRouteRoute
+  '/farms/$id': typeof FarmsIdRouteRoute
   '/products/$id': typeof ProductsIdRouteRoute
   '/seller/profile': typeof SellerProfileRouteRoute
   '/chat/$id': typeof ChatIdRoute
   '/chat/': typeof ChatIndexRoute
+  '/farms/': typeof FarmsIndexRoute
   '/seller/products/new': typeof SellerProductsNewRouteRoute
+  '/seller/farm/': typeof SellerFarmIndexRoute
   '/seller/products/': typeof SellerProductsIndexRoute
   '/seller/products/$id/edit': typeof SellerProductsIdEditRouteRoute
 }
@@ -191,11 +218,14 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard'
     | '/farmers/$id'
+    | '/farms/$id'
     | '/products/$id'
     | '/seller/profile'
     | '/chat/$id'
     | '/chat/'
+    | '/farms/'
     | '/seller/products/new'
+    | '/seller/farm/'
     | '/seller/products/'
     | '/seller/products/$id/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -209,11 +239,14 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard'
     | '/farmers/$id'
+    | '/farms/$id'
     | '/products/$id'
     | '/seller/profile'
     | '/chat/$id'
     | '/chat'
+    | '/farms'
     | '/seller/products/new'
+    | '/seller/farm'
     | '/seller/products'
     | '/seller/products/$id/edit'
   id:
@@ -229,11 +262,14 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/dashboard'
     | '/farmers/$id'
+    | '/farms/$id'
     | '/products/$id'
     | '/seller/profile'
     | '/chat/$id'
     | '/chat/'
+    | '/farms/'
     | '/seller/products/new'
+    | '/seller/farm/'
     | '/seller/products/'
     | '/seller/products/$id/edit'
   fileRoutesById: FileRoutesById
@@ -249,7 +285,9 @@ export interface RootRouteChildren {
   SellerRouteRoute: typeof SellerRouteRouteWithChildren
   SignupRouteRoute: typeof SignupRouteRoute
   FarmersIdRouteRoute: typeof FarmersIdRouteRoute
+  FarmsIdRouteRoute: typeof FarmsIdRouteRoute
   ProductsIdRouteRoute: typeof ProductsIdRouteRoute
+  FarmsIndexRoute: typeof FarmsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -317,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/farms/': {
+      id: '/farms/'
+      path: '/farms'
+      fullPath: '/farms/'
+      preLoaderRoute: typeof FarmsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/chat/': {
       id: '/chat/'
       path: '/'
@@ -345,6 +390,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIdRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/farms/$id': {
+      id: '/farms/$id'
+      path: '/farms/$id'
+      fullPath: '/farms/$id'
+      preLoaderRoute: typeof FarmsIdRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/farmers/$id': {
       id: '/farmers/$id'
       path: '/farmers/$id'
@@ -364,6 +416,13 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/seller/products/'
       preLoaderRoute: typeof SellerProductsIndexRouteImport
+      parentRoute: typeof SellerRouteRoute
+    }
+    '/seller/farm/': {
+      id: '/seller/farm/'
+      path: '/farm'
+      fullPath: '/seller/farm/'
+      preLoaderRoute: typeof SellerFarmIndexRouteImport
       parentRoute: typeof SellerRouteRoute
     }
     '/seller/products/new': {
@@ -411,6 +470,7 @@ const ChatRouteRouteWithChildren = ChatRouteRoute._addFileChildren(
 interface SellerRouteRouteChildren {
   SellerProfileRouteRoute: typeof SellerProfileRouteRoute
   SellerProductsNewRouteRoute: typeof SellerProductsNewRouteRoute
+  SellerFarmIndexRoute: typeof SellerFarmIndexRoute
   SellerProductsIndexRoute: typeof SellerProductsIndexRoute
   SellerProductsIdEditRouteRoute: typeof SellerProductsIdEditRouteRoute
 }
@@ -418,6 +478,7 @@ interface SellerRouteRouteChildren {
 const SellerRouteRouteChildren: SellerRouteRouteChildren = {
   SellerProfileRouteRoute: SellerProfileRouteRoute,
   SellerProductsNewRouteRoute: SellerProductsNewRouteRoute,
+  SellerFarmIndexRoute: SellerFarmIndexRoute,
   SellerProductsIndexRoute: SellerProductsIndexRoute,
   SellerProductsIdEditRouteRoute: SellerProductsIdEditRouteRoute,
 }
@@ -437,7 +498,9 @@ const rootRouteChildren: RootRouteChildren = {
   SellerRouteRoute: SellerRouteRouteWithChildren,
   SignupRouteRoute: SignupRouteRoute,
   FarmersIdRouteRoute: FarmersIdRouteRoute,
+  FarmsIdRouteRoute: FarmsIdRouteRoute,
   ProductsIdRouteRoute: ProductsIdRouteRoute,
+  FarmsIndexRoute: FarmsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
