@@ -57,7 +57,7 @@ export function FarmReviews({
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold text-gray-800">Відгуки ({reviewCount})</h2>
-        {avgRating && (
+        {avgRating !== null && (
           <div className="flex items-center gap-1">
             <span className="text-amber-400 text-sm">★</span>
             <span className="font-bold text-gray-900 text-sm">{avgRating}</span>
@@ -85,7 +85,7 @@ export function FarmReviews({
               {addReview.isPending ? 'Надсилання...' : 'Надіслати'}
             </button>
             {addReview.isError && (
-              <p className="text-xs text-red-600">{addReview.error.message}</p>
+              <p className="text-xs text-red-600">{addReview.error?.message}</p>
             )}
           </div>
         </div>
