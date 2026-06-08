@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import Message from '#models/message'
 
-export async function sendMailgunEmail({
+export async function sendEmail({
   to,
   subject,
   text,
@@ -10,26 +10,20 @@ export async function sendMailgunEmail({
   subject: string
   text: string
 }) {
-  const apiKey = process.env.MAILGUN_API_KEY!
-  const domain = process.env.MAILGUN_DOMAIN!
+  const apiKey = process.env.RESEND_API_KEY!
   const from = process.env.MAIL_FROM!
 
-  const form = new FormData()
-  form.append('from', from)
-  form.append('to', to)
-  form.append('subject', subject)
-  form.append('text', text)
-
-  const response = await fetch(`https://api.mailgun.net/v3/${domain}/messages`, {
+  const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
-      Authorization: `Basic ${Buffer.from(`api:${apiKey}`).toString('base64')}`,
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
     },
-    body: form,
+    body: JSON.stringify({ from, to, subject, text }),
   })
 
   if (!response.ok) {
-    throw new Error(`Mailgun error: ${response.status} ${await response.text()}`)
+    throw new Error(`Resend error: ${response.status} ${await response.text()}`)
   }
 }
 
@@ -48,7 +42,7 @@ export async function processMessageNotification(job: { data: { messageId: numbe
 
   const appUrl = process.env.APP_URL!
 
-  await sendMailgunEmail({
+  await sendEmail({
     to: recipient.email,
     subject: 'Нове повідомлення в Farm Market',
     text: `У вас є непрочитане повідомлення. Відкрийте чат: ${appUrl}/chat/${conversation.id}`,

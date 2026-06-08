@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
-import { sendMailgunEmail, processMessageNotification } from '#jobs/send_message_notification'
+import { sendEmail, processMessageNotification } from '#jobs/send_message_notification'
 
-test.group('sendMailgunEmail', (group) => {
+test.group('sendEmail', (group) => {
   let originalFetch: typeof global.fetch
 
   group.each.setup(() => {
@@ -12,7 +12,7 @@ test.group('sendMailgunEmail', (group) => {
     global.fetch = originalFetch
   })
 
-  test('sends POST request to Mailgun with correct auth header', async ({ assert }) => {
+  test('sends POST request to Resend with correct auth header', async ({ assert }) => {
     const calls: { url: string; init: RequestInit }[] = []
 
     global.fetch = async (url: string | URL | Request, init?: RequestInit) => {
@@ -20,37 +20,33 @@ test.group('sendMailgunEmail', (group) => {
       return new Response(JSON.stringify({ id: 'test-id' }), { status: 200 })
     }
 
-    process.env.MAILGUN_API_KEY = 'test-key'
-    process.env.MAILGUN_DOMAIN = 'mg.example.com'
+    process.env.RESEND_API_KEY = 'test-key'
     process.env.MAIL_FROM = 'noreply@example.com'
 
-    await sendMailgunEmail({
+    await sendEmail({
       to: 'user@example.com',
       subject: 'Test',
       text: 'Hello',
     })
 
     assert.equal(calls.length, 1)
-    assert.include(calls[0].url, 'mg.example.com')
-    assert.include(calls[0].url, '/messages')
+    assert.equal(calls[0].url, 'https://api.resend.com/emails')
     assert.equal((calls[0].init as RequestInit).method, 'POST')
     const authHeader = ((calls[0].init as RequestInit).headers as Record<string, string>)[
       'Authorization'
     ]
-    const decoded = Buffer.from(authHeader.replace('Basic ', ''), 'base64').toString()
-    assert.equal(decoded, 'api:test-key')
+    assert.equal(authHeader, 'Bearer test-key')
   })
 
-  test('throws when Mailgun returns non-200', async ({ assert }) => {
+  test('throws when Resend returns non-200', async ({ assert }) => {
     global.fetch = async () => new Response('Bad Request', { status: 400 })
 
-    process.env.MAILGUN_API_KEY = 'test-key'
-    process.env.MAILGUN_DOMAIN = 'mg.example.com'
+    process.env.RESEND_API_KEY = 'test-key'
     process.env.MAIL_FROM = 'noreply@example.com'
 
     await assert.rejects(
-      () => sendMailgunEmail({ to: 'user@example.com', subject: 'Test', text: 'Hello' }),
-      /Mailgun error: 400/
+      () => sendEmail({ to: 'user@example.com', subject: 'Test', text: 'Hello' }),
+      /Resend error: 400/
     )
   })
 })
@@ -90,7 +86,6 @@ test.group('processMessageNotification', (group) => {
     // @ts-expect-error - mock
     const messageModule = await import('#models/message')
     const original = messageModule.default
-    // Patch query to return our fake message
     const mockQuery = {
       where: () => mockQuery,
       preload: () => mockQuery,

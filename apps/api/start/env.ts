@@ -24,8 +24,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   // Redis
   REDIS_URL: Env.schema.string(),
 
-  // Mailgun
-  MAILGUN_API_KEY: Env.schema.secret(),
-  MAILGUN_DOMAIN: Env.schema.string(),
+  // Resend
+  RESEND_API_KEY: Env.schema.secret(),
   MAIL_FROM: Env.schema.string(),
 })
