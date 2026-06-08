@@ -50,6 +50,12 @@ router
       .group(() => {
         router.get('profile', [controllers.seller.SellerProfile, 'show'])
         router.put('profile', [controllers.seller.SellerProfile, 'update'])
+        router.get('farm', [controllers.seller.SellerFarm, 'show'])
+        router.post('farm', [controllers.seller.SellerFarm, 'store'])
+        router.patch('farm', [controllers.seller.SellerFarm, 'update'])
+        router.post('farm/cover', [controllers.seller.SellerFarm, 'uploadCover'])
+        router.post('farm/photos', [controllers.seller.SellerFarmPhotos, 'store'])
+        router.delete('farm/photos/:photoId', [controllers.seller.SellerFarmPhotos, 'destroy'])
         router.get('products', [controllers.seller.SellerProducts, 'index'])
         router.post('products', [controllers.seller.SellerProducts, 'store'])
         router.put('products/:id', [controllers.seller.SellerProducts, 'update'])
@@ -64,6 +70,13 @@ router
         router.get('/:id', [controllers.farmers.Farmers, 'show'])
       })
       .prefix('farmers')
+
+    router
+      .group(() => {
+        router.get('/', [controllers.catalog.Farms, 'index'])
+        router.get('/:id', [controllers.catalog.Farms, 'show'])
+      })
+      .prefix('farms')
 
     router
       .group(() => {
