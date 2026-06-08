@@ -62,6 +62,63 @@ export class ConversationSchema extends BaseModel {
   declare updatedAt: DateTime
 }
 
+export class FarmPhotoSchema extends BaseModel {
+  static $columns = ['createdAt', 'farmId', 'id', 'imagePath', 'position'] as const
+  $columns = FarmPhotoSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare farmId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare imagePath: string
+  @column()
+  declare position: number
+}
+
+export class FarmReviewSchema extends BaseModel {
+  static $columns = ['createdAt', 'farmId', 'id', 'rating', 'text', 'userId'] as const
+  $columns = FarmReviewSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare farmId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare rating: number
+  @column()
+  declare text: string
+  @column()
+  declare userId: number
+}
+
+export class FarmSchema extends BaseModel {
+  static $columns = ['activities', 'coverImagePath', 'createdAt', 'description', 'id', 'instagram', 'location', 'name', 'updatedAt', 'userId'] as const
+  $columns = FarmSchema.$columns
+  @column()
+  declare activities: any
+  @column()
+  declare coverImagePath: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare instagram: string | null
+  @column()
+  declare location: string | null
+  @column()
+  declare name: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class MessageSchema extends BaseModel {
   static $columns = ['conversationId', 'createdAt', 'id', 'notificationSentAt', 'readAt', 'senderId', 'text', 'updatedAt'] as const
   $columns = MessageSchema.$columns
