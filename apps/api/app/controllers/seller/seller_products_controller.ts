@@ -2,8 +2,10 @@ import Product from '#models/product'
 import ProductTransformer from '#transformers/product_transformer'
 import { createProductSchema, updateProductSchema } from '#validators/product'
 import { zodValidate } from '#lib/zod_validate'
-import app from '@adonisjs/core/services/app'
+import { getStorageService } from '#services/storage_service'
 import type { HttpContext } from '@adonisjs/core/http'
+import { readFile } from 'node:fs/promises'
+import { randomUUID } from 'node:crypto'
 
 export default class SellerProductsController {
   async index({ auth, serialize }: HttpContext) {
@@ -91,13 +93,11 @@ export default class SellerProductsController {
     if (!image) return response.unprocessableEntity({ message: 'No image provided' })
     if (!image.isValid) return response.unprocessableEntity({ message: image.errors })
 
-    const { randomUUID } = await import('node:crypto')
-    const ext = image.extname
-    const fileName = `${randomUUID()}.${ext}`
+    const key = `products/${randomUUID()}.${image.extname}`
+    const buffer = await readFile(image.tmpPath!)
+    const contentType = image.headers['content-type'] ?? 'image/jpeg'
 
-    await image.move(app.makePath('storage/uploads/products'), { name: fileName })
-
-    product.imagePath = `/uploads/products/${fileName}`
+    product.imagePath = await getStorageService().upload(buffer, key, contentType)
     await product.save()
 
     return serialize.withoutWrapping(ProductTransformer.transform(product))
