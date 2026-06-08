@@ -66,6 +66,8 @@
     "@farm-market/shared": "workspace:*",
     "@japa/api-client": "^3.2.1",
     "@tuyau/core": "^1.2.2",
+    "bullmq": "^5.78.0",
+    "ioredis": "^5.11.1",
     "luxon": "^3.7.2",
     "pg": "^8.21.0",
     "reflect-metadata": "^0.2.2",
