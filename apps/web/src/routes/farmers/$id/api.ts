@@ -6,6 +6,7 @@ export interface Farmer {
   fullName: string | null
   farmName: string | null
   memberSince: string
+  farmId: number | null
   contacts: SellerContacts | null
   products: Product[]
 }

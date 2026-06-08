@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import Product from '#models/product'
+import Farm from '#models/farm'
 
 export default class FarmersController {
   async show({ params, auth, response }: HttpContext) {
@@ -11,6 +12,7 @@ export default class FarmersController {
     }
 
     const isAuthenticated = await auth.check()
+    const farm = await Farm.query().where('user_id', farmer.id).first()
 
     const products = await Product.query()
       .where('seller_id', farmer.id)
@@ -24,6 +26,7 @@ export default class FarmersController {
       id: farmer.id,
       fullName: farmer.fullName,
       farmName: farmer.farmName,
+      farmId: farm?.id ?? null,
       memberSince: farmer.createdAt,
       contacts: isAuthenticated
         ? {

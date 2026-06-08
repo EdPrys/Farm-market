@@ -1,4 +1,4 @@
-import { useParams } from '@tanstack/react-router'
+import { useParams, Link } from '@tanstack/react-router'
 import { useFarmer } from './use-farmer'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
 import { ProductCard } from '../../catalog/-product-card'
@@ -29,6 +29,15 @@ export function FarmerProfilePage() {
               month: 'long',
             })}
           </p>
+          {farmer.farmId && (
+            <Link
+              to="/farms/$id"
+              params={{ id: String(farmer.farmId) }}
+              className="inline-block mt-3 text-sm text-green-700 hover:underline"
+            >
+              Переглянути ферму →
+            </Link>
+          )}
         </div>
         <div className="sm:w-64">
           <ContactBlock contacts={farmer.contacts} isAuthenticated={!!user} />
