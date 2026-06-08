@@ -74,6 +74,19 @@ app.ready(async () => {
         })
 
         io.to(`conversation:${conversationId}`).emit('new_message', message.serialize())
+
+        const { notificationQueue } = await import('#start/queue')
+        if (notificationQueue) {
+          await notificationQueue.add(
+            'message',
+            { messageId: message.id },
+            {
+              delay: 30 * 60 * 1000,
+              attempts: 3,
+              backoff: { type: 'exponential', delay: 5000 },
+            }
+          )
+        }
       }
     )
   })
