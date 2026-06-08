@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteRouteImport } from './routes/signup/route'
 import { Route as SellerRouteRouteImport } from './routes/seller/route'
+import { Route as ResetPasswordRouteRouteImport } from './routes/reset-password/route'
 import { Route as ProfileRouteRouteImport } from './routes/profile/route'
 import { Route as LoginRouteRouteImport } from './routes/login/route'
+import { Route as ForgotPasswordRouteRouteImport } from './routes/forgot-password/route'
 import { Route as ChatRouteRouteImport } from './routes/chat/route'
 import { Route as CatalogRouteRouteImport } from './routes/catalog/route'
 import { Route as CartRouteRouteImport } from './routes/cart/route'
@@ -41,6 +43,11 @@ const SellerRouteRoute = SellerRouteRouteImport.update({
   path: '/seller',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRouteRoute = ResetPasswordRouteRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRouteRoute = ProfileRouteRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -49,6 +56,11 @@ const ProfileRouteRoute = ProfileRouteRouteImport.update({
 const LoginRouteRoute = LoginRouteRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRouteRoute = ForgotPasswordRouteRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatRouteRoute = ChatRouteRouteImport.update({
@@ -143,8 +155,10 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRouteRoute
   '/catalog': typeof CatalogRouteRoute
   '/chat': typeof ChatRouteRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRouteRoute
   '/login': typeof LoginRouteRoute
   '/profile': typeof ProfileRouteRoute
+  '/reset-password': typeof ResetPasswordRouteRoute
   '/seller': typeof SellerRouteRouteWithChildren
   '/signup': typeof SignupRouteRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRoute
@@ -164,8 +178,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cart': typeof CartRouteRoute
   '/catalog': typeof CatalogRouteRoute
+  '/forgot-password': typeof ForgotPasswordRouteRoute
   '/login': typeof LoginRouteRoute
   '/profile': typeof ProfileRouteRoute
+  '/reset-password': typeof ResetPasswordRouteRoute
   '/seller': typeof SellerRouteRouteWithChildren
   '/signup': typeof SignupRouteRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRoute
@@ -188,8 +204,10 @@ export interface FileRoutesById {
   '/cart': typeof CartRouteRoute
   '/catalog': typeof CatalogRouteRoute
   '/chat': typeof ChatRouteRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRouteRoute
   '/login': typeof LoginRouteRoute
   '/profile': typeof ProfileRouteRoute
+  '/reset-password': typeof ResetPasswordRouteRoute
   '/seller': typeof SellerRouteRouteWithChildren
   '/signup': typeof SignupRouteRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRoute
@@ -212,8 +230,10 @@ export interface FileRouteTypes {
     | '/cart'
     | '/catalog'
     | '/chat'
+    | '/forgot-password'
     | '/login'
     | '/profile'
+    | '/reset-password'
     | '/seller'
     | '/signup'
     | '/dashboard'
@@ -233,8 +253,10 @@ export interface FileRouteTypes {
     | '/'
     | '/cart'
     | '/catalog'
+    | '/forgot-password'
     | '/login'
     | '/profile'
+    | '/reset-password'
     | '/seller'
     | '/signup'
     | '/dashboard'
@@ -256,8 +278,10 @@ export interface FileRouteTypes {
     | '/cart'
     | '/catalog'
     | '/chat'
+    | '/forgot-password'
     | '/login'
     | '/profile'
+    | '/reset-password'
     | '/seller'
     | '/signup'
     | '/_authenticated/dashboard'
@@ -280,8 +304,10 @@ export interface RootRouteChildren {
   CartRouteRoute: typeof CartRouteRoute
   CatalogRouteRoute: typeof CatalogRouteRoute
   ChatRouteRoute: typeof ChatRouteRouteWithChildren
+  ForgotPasswordRouteRoute: typeof ForgotPasswordRouteRoute
   LoginRouteRoute: typeof LoginRouteRoute
   ProfileRouteRoute: typeof ProfileRouteRoute
+  ResetPasswordRouteRoute: typeof ResetPasswordRouteRoute
   SellerRouteRoute: typeof SellerRouteRouteWithChildren
   SignupRouteRoute: typeof SignupRouteRoute
   FarmersIdRouteRoute: typeof FarmersIdRouteRoute
@@ -306,6 +332,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SellerRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -318,6 +351,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chat': {
@@ -493,8 +533,10 @@ const rootRouteChildren: RootRouteChildren = {
   CartRouteRoute: CartRouteRoute,
   CatalogRouteRoute: CatalogRouteRoute,
   ChatRouteRoute: ChatRouteRouteWithChildren,
+  ForgotPasswordRouteRoute: ForgotPasswordRouteRoute,
   LoginRouteRoute: LoginRouteRoute,
   ProfileRouteRoute: ProfileRouteRoute,
+  ResetPasswordRouteRoute: ResetPasswordRouteRoute,
   SellerRouteRoute: SellerRouteRouteWithChildren,
   SignupRouteRoute: SignupRouteRoute,
   FarmersIdRouteRoute: FarmersIdRouteRoute,

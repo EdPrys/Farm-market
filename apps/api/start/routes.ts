@@ -32,6 +32,8 @@ router
       .group(() => {
         router.post('signup', [controllers.auth.NewAccount, 'store'])
         router.post('login', [controllers.auth.AccessTokens, 'store'])
+        router.post('forgot-password', [controllers.auth.PasswordReset, 'forgot'])
+        router.post('reset-password', [controllers.auth.PasswordReset, 'reset'])
       })
       .prefix('auth')
       .as('auth')
