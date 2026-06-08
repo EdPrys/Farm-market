@@ -37,8 +37,9 @@ export async function processMessageNotification(job: { data: { messageId: numbe
   const message = await Message.query()
     .where('id', job.data.messageId)
     .preload('conversation', (q) => q.preload('buyer').preload('seller'))
-    .firstOrFail()
+    .first()
 
+  if (!message) return
   if (message.readAt || message.notificationSentAt) return
 
   const conversation = message.conversation
