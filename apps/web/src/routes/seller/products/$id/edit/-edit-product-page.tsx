@@ -26,11 +26,6 @@ export function EditProductPage() {
   }
 
   const isPending = updateProduct.isPending || uploadImage.isPending
-  const error = updateProduct.isError
-    ? updateProduct.error instanceof Error
-      ? updateProduct.error.message
-      : 'Помилка'
-    : null
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
@@ -42,7 +37,7 @@ export function EditProductPage() {
           imageFileRef.current = file
         }}
         isPending={isPending}
-        error={error}
+        error={updateProduct.error}
       />
     </div>
   )

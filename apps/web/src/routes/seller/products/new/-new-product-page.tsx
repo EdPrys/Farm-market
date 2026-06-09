@@ -20,11 +20,6 @@ export function NewProductPage() {
   }
 
   const isPending = createProduct.isPending || uploadImage.isPending
-  const error = createProduct.isError
-    ? createProduct.error instanceof Error
-      ? createProduct.error.message
-      : 'Помилка'
-    : null
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
@@ -35,7 +30,7 @@ export function NewProductPage() {
           imageFileRef.current = file
         }}
         isPending={isPending}
-        error={error}
+        error={createProduct.error}
       />
     </div>
   )

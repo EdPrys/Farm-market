@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { Button, Input, Label } from '@farm-market/ui'
 import { useCategories } from '../../catalog/use-categories'
+import { getFieldError, ApiValidationError } from '@/lib/api/errors'
 import type { Product } from '../../catalog/types'
 import type { ProductInput } from './api'
 
@@ -9,12 +10,13 @@ interface Props {
   onSubmit: (data: ProductInput) => void
   onImageChange?: (file: File | null) => void
   isPending: boolean
-  error?: string | null
+  error?: unknown
 }
 
 const UNITS = ['кг', 'г', 'шт', 'л', 'мл', 'пучок', 'банка', 'упаковка', 'десяток']
 
 export function ProductForm({ initial, onSubmit, onImageChange, isPending, error }: Props) {
+  const fieldError = (field: string) => getFieldError(error, field)
   const [name, setName] = useState(initial?.name ?? '')
   const [categoryId, setCategoryId] = useState<number>(initial?.category.id ?? 0)
   const [description, setDescription] = useState(initial?.description ?? '')
@@ -47,6 +49,7 @@ export function ProductForm({ initial, onSubmit, onImageChange, isPending, error
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="name">Назва товару *</Label>
         <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+        {fieldError('name') && <p className="text-xs text-red-500 mt-0.5">{fieldError('name')}</p>}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -67,6 +70,7 @@ export function ProductForm({ initial, onSubmit, onImageChange, isPending, error
             </option>
           ))}
         </select>
+        {fieldError('categoryId') && <p className="text-xs text-red-500 mt-0.5">{fieldError('categoryId')}</p>}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -92,6 +96,7 @@ export function ProductForm({ initial, onSubmit, onImageChange, isPending, error
             onChange={(e) => setPrice(e.target.value)}
             required
           />
+          {fieldError('price') && <p className="text-xs text-red-500 mt-0.5">{fieldError('price')}</p>}
         </div>
         <div className="flex flex-col gap-1.5 w-28">
           <Label htmlFor="unit">Одиниця *</Label>
@@ -119,6 +124,7 @@ export function ProductForm({ initial, onSubmit, onImageChange, isPending, error
             onChange={(e) => setQuantity(e.target.value)}
             required
           />
+          {fieldError('quantity') && <p className="text-xs text-red-500 mt-0.5">{fieldError('quantity')}</p>}
         </div>
       </div>
 
@@ -177,7 +183,9 @@ export function ProductForm({ initial, onSubmit, onImageChange, isPending, error
         )}
       </div>
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error instanceof Error && !(error instanceof ApiValidationError) && (
+        <p className="text-sm text-destructive">{error.message}</p>
+      )}
 
       <Button type="submit" disabled={isPending} className="w-full">
         {isPending ? 'Збереження...' : 'Зберегти товар'}
