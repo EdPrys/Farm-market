@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { Button, Input, Label } from '@farm-market/ui'
+import { getFieldError, ApiValidationError } from '@/lib/api/errors'
 import { useSellerProfile } from './use-seller-profile'
 import { useUpdateSellerProfile } from './use-update-seller-profile'
 import type { SellerProfile } from '../products/api'
 
 function SellerProfileForm({ initial }: { initial: SellerProfile }) {
   const update = useUpdateSellerProfile()
+  const fieldError = (field: string) => getFieldError(update.error, field)
   const [phone, setPhone] = useState(initial.phone ?? '')
   const [telegram, setTelegram] = useState(initial.telegram ?? '')
   const [viber, setViber] = useState(initial.viber ?? '')
@@ -30,6 +32,7 @@ function SellerProfileForm({ initial }: { initial: SellerProfile }) {
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
+        {fieldError('phone') && <p className="text-xs text-red-500 mt-0.5">{fieldError('phone')}</p>}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -40,6 +43,7 @@ function SellerProfileForm({ initial }: { initial: SellerProfile }) {
           value={telegram}
           onChange={(e) => setTelegram(e.target.value)}
         />
+        {fieldError('telegram') && <p className="text-xs text-red-500 mt-0.5">{fieldError('telegram')}</p>}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -51,9 +55,10 @@ function SellerProfileForm({ initial }: { initial: SellerProfile }) {
           value={viber}
           onChange={(e) => setViber(e.target.value)}
         />
+        {fieldError('viber') && <p className="text-xs text-red-500 mt-0.5">{fieldError('viber')}</p>}
       </div>
 
-      {update.isError && (
+      {update.isError && !(update.error instanceof ApiValidationError) && (
         <p className="text-sm text-red-500">
           {update.error instanceof Error ? update.error.message : 'Помилка збереження'}
         </p>
