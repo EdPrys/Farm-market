@@ -12,6 +12,5 @@ apps/api/.adonisjs/
 # Vite cache
 apps/web/.vite/
 
-# Superpowers specs and plans
-docs/superpowers/specs/
-docs/superpowers/plans/
+# Superpowers browser session files (not specs/plans)
+.superpowers/
