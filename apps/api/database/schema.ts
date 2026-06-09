@@ -32,6 +32,37 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class BuyerRequestSchema extends BaseModel {
+  static $columns = ['budget', 'categoryId', 'createdAt', 'description', 'expiresAt', 'id', 'location', 'quantity', 'status', 'title', 'unit', 'updatedAt', 'userId'] as const
+  $columns = BuyerRequestSchema.$columns
+  @column()
+  declare budget: string | null
+  @column()
+  declare categoryId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string | null
+  @column.dateTime()
+  declare expiresAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare location: string
+  @column()
+  declare quantity: string
+  @column()
+  declare status: string
+  @column()
+  declare title: string
+  @column()
+  declare unit: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class CategorySchema extends BaseModel {
   static $columns = ['createdAt', 'id', 'name', 'slug', 'updatedAt'] as const
   $columns = CategorySchema.$columns
