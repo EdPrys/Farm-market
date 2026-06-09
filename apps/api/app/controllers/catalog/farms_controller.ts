@@ -71,6 +71,11 @@ export default class FarmsController {
       category: p.category
         ? { id: p.category.id, name: p.category.name, slug: p.category.slug }
         : null,
+      seller: {
+        id: farm.user.id,
+        farmName: farm.user.farmName ?? null,
+        fullName: farm.user.fullName ?? null,
+      },
     }))
 
     const [reviewStats] = await db

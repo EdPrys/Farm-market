@@ -10,6 +10,7 @@ interface ProductSummary {
   imagePath: string | null
   status: string
   category: { id: number; name: string; slug: string } | null
+  seller: { id: number; farmName: string | null; fullName: string | null }
 }
 
 export default class FarmTransformer extends BaseTransformer<Farm> {
