@@ -55,7 +55,7 @@ export default class BuyerRequestsController {
       quantity: String(data.quantity),
       unit: data.unit,
       location: data.location,
-      budget: data.budget !== null ? String(data.budget) : null,
+      budget: data.budget !== undefined ? String(data.budget) : null,
       expiresAt: data.expiresAt ? DateTime.fromISO(data.expiresAt) : null,
       status: 'active',
     })
