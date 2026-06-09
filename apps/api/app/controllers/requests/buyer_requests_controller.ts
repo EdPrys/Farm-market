@@ -27,7 +27,7 @@ export default class BuyerRequestsController {
 
     const requests = await query.paginate(page, 20)
     return response.ok({
-      data: BuyerRequestTransformer.transform(requests.all()),
+      data: requests.all().map((req) => new BuyerRequestTransformer(req).toObject()),
       meta: requests.getMeta(),
     })
   }
