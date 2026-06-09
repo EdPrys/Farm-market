@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { Button, Input, Label } from '@farm-market/ui'
+import { getFieldError, ApiValidationError } from '@/lib/api/errors'
 import {
   useSellerFarm,
   useCreateFarm,
@@ -37,8 +38,9 @@ function FarmInfoForm({
   onCreate: (data: FarmInput) => void
   onUpdate: (data: Partial<FarmInput>) => void
   isSaving: boolean
-  error?: Error | null
+  error?: unknown
 }) {
+  const fieldError = (field: string) => getFieldError(error, field)
   const [name, setName] = useState(farm?.name ?? '')
   const [description, setDescription] = useState(farm?.description ?? '')
   const [location, setLocation] = useState(farm?.location ?? '')
@@ -72,6 +74,7 @@ function FarmInfoForm({
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="farm-name">Назва ферми *</Label>
         <Input id="farm-name" value={name} onChange={(e) => setName(e.target.value)} required />
+        {fieldError('name') && <p className="text-xs text-red-500 mt-0.5">{fieldError('name')}</p>}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -130,7 +133,9 @@ function FarmInfoForm({
         {isSaving ? 'Збереження...' : farm ? 'Зберегти' : 'Створити ферму'}
       </Button>
 
-      {error && <p className="text-sm text-red-600">{error.message}</p>}
+      {error instanceof Error && !(error instanceof ApiValidationError) && (
+        <p className="text-sm text-red-600">{error.message}</p>
+      )}
     </form>
   )
 }
