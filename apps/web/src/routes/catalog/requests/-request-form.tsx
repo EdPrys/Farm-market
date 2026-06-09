@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button, Input, Label } from '@farm-market/ui'
+import { getFieldError, ApiValidationError } from '@/lib/api/errors'
 import { useCategories } from '../use-categories'
 import { useCreateRequest } from './use-requests'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
@@ -23,6 +24,8 @@ export function RequestForm({ onClose }: Props) {
   const [description, setDescription] = useState('')
   const [budget, setBudget] = useState('')
   const [expiresAt, setExpiresAt] = useState('')
+
+  const fieldError = (field: string) => getFieldError(createRequest.error, field)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -65,11 +68,14 @@ export function RequestForm({ onClose }: Props) {
               placeholder="Напр.: Шукаю картоплю для ресторану"
               required
             />
+            {fieldError('title') && (
+              <p className="text-xs text-red-500 mt-0.5">{fieldError('title')}</p>
+            )}
           </div>
 
           {/* Category */}
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="req-category">Категорія</Label>
+            <Label htmlFor="req-category">Категорія *</Label>
             <select
               id="req-category"
               value={categoryId}
@@ -83,6 +89,9 @@ export function RequestForm({ onClose }: Props) {
                 </option>
               ))}
             </select>
+            {fieldError('categoryId') && (
+              <p className="text-xs text-red-500 mt-0.5">{fieldError('categoryId')}</p>
+            )}
           </div>
 
           {/* Quantity + Unit */}
@@ -99,6 +108,9 @@ export function RequestForm({ onClose }: Props) {
                 placeholder="100"
                 required
               />
+              {fieldError('quantity') && (
+                <p className="text-xs text-red-500 mt-0.5">{fieldError('quantity')}</p>
+              )}
             </div>
             <div className="flex flex-col gap-1.5 w-28">
               <Label htmlFor="req-unit">Одиниця *</Label>
@@ -127,6 +139,9 @@ export function RequestForm({ onClose }: Props) {
               placeholder="Напр.: Київ"
               required
             />
+            {fieldError('location') && (
+              <p className="text-xs text-red-500 mt-0.5">{fieldError('location')}</p>
+            )}
           </div>
 
           {/* Description */}
@@ -177,8 +192,8 @@ export function RequestForm({ onClose }: Props) {
             </div>
           )}
 
-          {createRequest.isError && (
-            <p className="text-sm text-red-500">Помилка. Спробуйте ще раз.</p>
+          {createRequest.isError && !(createRequest.error instanceof ApiValidationError) && (
+            <p className="text-sm text-red-500">{createRequest.error?.message ?? 'Помилка. Спробуйте ще раз.'}</p>
           )}
 
           <div className="flex gap-3 pt-1">
