@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useRouter } from '@tanstack/react-router'
 import { Button, Input, Label, Checkbox } from '@farm-market/ui'
+import { getFieldError, ApiValidationError } from '@/lib/api/errors'
 import { useSignup } from '@/shared/auth/use-signup'
 import { AuthLayout } from '@/shared/auth/auth-layout'
 
@@ -13,6 +14,8 @@ export function SignupPage() {
   const [farmName, setFarmName] = useState('')
   const signup = useSignup()
   const router = useRouter()
+
+  const fieldError = (field: string) => getFieldError(signup.error, field)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,6 +44,9 @@ export function SignupPage() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
+            {fieldError('fullName') && (
+              <p className="text-xs text-red-500 mt-0.5">{fieldError('fullName')}</p>
+            )}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="email">Email</Label>
@@ -52,6 +58,9 @@ export function SignupPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {fieldError('email') && (
+              <p className="text-xs text-red-500 mt-0.5">{fieldError('email')}</p>
+            )}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="password">Пароль</Label>
@@ -63,6 +72,9 @@ export function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            {fieldError('password') && (
+              <p className="text-xs text-red-500 mt-0.5">{fieldError('password')}</p>
+            )}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="passwordConfirmation">Підтвердження пароля</Label>
@@ -74,6 +86,9 @@ export function SignupPage() {
               onChange={(e) => setPasswordConfirmation(e.target.value)}
               required
             />
+            {fieldError('passwordConfirmation') && (
+              <p className="text-xs text-red-500 mt-0.5">{fieldError('passwordConfirmation')}</p>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <Checkbox
@@ -96,7 +111,7 @@ export function SignupPage() {
               />
             </div>
           )}
-          {signup.isError && (
+          {signup.isError && !(signup.error instanceof ApiValidationError) && (
             <p className="text-sm text-destructive">
               {signup.error instanceof Error ? signup.error.message : 'Помилка реєстрації'}
             </p>
