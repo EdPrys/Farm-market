@@ -30,6 +30,8 @@ export const authApi = {
     apiFetch('/api/v1/account/logout', { method: 'POST' }),
   profile: () =>
     apiFetch<User>('/api/v1/account/profile'),
+  subscribe: () =>
+    apiFetch<User>('/api/v1/account/subscribe', { method: 'POST' }),
   forgotPassword: (data: { email: string }) =>
     apiFetch<{ message: string }>('/api/v1/auth/forgot-password', {
       method: 'POST',

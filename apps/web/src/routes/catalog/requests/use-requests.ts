@@ -2,10 +2,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { requestsApi } from './api'
 import type { CreateBuyerRequestPayload } from './types'
 
-export function useRequests(params: { category?: string; page?: number }) {
+export function useRequests(params: { category?: string; page?: number; enabled?: boolean }) {
+  const { enabled = true, ...fetchParams } = params
   return useQuery({
-    queryKey: ['requests', params],
-    queryFn: () => requestsApi.getRequests(params),
+    queryKey: ['requests', fetchParams],
+    queryFn: () => requestsApi.getRequests(fetchParams),
+    enabled,
   })
 }
 
