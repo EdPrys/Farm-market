@@ -1,5 +1,5 @@
 import { apiFetch } from '@/lib/api/fetch-client'
-import type { BuyerRequest, BuyerRequestsMeta, CreateBuyerRequestPayload } from './types'
+import type { BuyerRequest, BuyerRequestsMeta, CreateBuyerRequestPayload, UpdateBuyerRequestPayload } from './types'
 
 export const requestsApi = {
   getRequests: (params: { category?: string; location?: string; page?: number }) => {
@@ -23,6 +23,15 @@ export const requestsApi = {
     apiFetch<BuyerRequest>(`/api/v1/requests/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ status: 'closed' }),
+    }),
+
+  getRequest: (id: number) =>
+    apiFetch<BuyerRequest>(`/api/v1/requests/${id}`),
+
+  updateRequest: (id: number, payload: UpdateBuyerRequestPayload) =>
+    apiFetch<BuyerRequest>(`/api/v1/requests/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
     }),
 
   deleteRequest: (id: number) =>

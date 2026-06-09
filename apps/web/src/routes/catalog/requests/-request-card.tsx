@@ -35,8 +35,15 @@ export function RequestCard({ request, isOwn, onClose, onDelete }: Props) {
   const hasContacts =
     request.user && (request.user.phone || request.user.telegram || request.user.viber)
 
+  const handleCardClick = () => {
+    void navigate({ to: '/requests/$id', params: { id: String(request.id) } })
+  }
+
   return (
-    <div className="border border-gray-200 rounded-xl p-4 bg-white flex flex-col gap-3">
+    <div
+      className="border border-gray-200 rounded-xl p-4 bg-white flex flex-col gap-3 cursor-pointer hover:border-green-300 transition-colors"
+      onClick={handleCardClick}
+    >
       {/* Header row */}
       <div className="flex justify-between items-start gap-3">
         <div className="flex-1 min-w-0">
@@ -67,7 +74,7 @@ export function RequestCard({ request, isOwn, onClose, onDelete }: Props) {
       </div>
 
       {/* Footer row */}
-      <div className="flex items-center gap-2 border-t border-gray-100 pt-3">
+      <div className="flex items-center gap-2 border-t border-gray-100 pt-3" onClick={(e) => e.stopPropagation()}>
         <span className="text-xs text-gray-400 flex-1">
           {request.user?.fullName ?? 'Анонім'}
         </span>

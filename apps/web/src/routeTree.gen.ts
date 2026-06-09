@@ -24,6 +24,7 @@ import { Route as FarmsIndexRouteImport } from './routes/farms/index'
 import { Route as ChatIndexRouteImport } from './routes/chat/index'
 import { Route as ChatIdRouteImport } from './routes/chat/$id'
 import { Route as SellerProfileRouteRouteImport } from './routes/seller/profile/route'
+import { Route as RequestsIdRouteRouteImport } from './routes/requests/$id/route'
 import { Route as ProductsIdRouteRouteImport } from './routes/products/$id/route'
 import { Route as FarmsIdRouteRouteImport } from './routes/farms/$id/route'
 import { Route as FarmersIdRouteRouteImport } from './routes/farmers/$id/route'
@@ -107,6 +108,11 @@ const SellerProfileRouteRoute = SellerProfileRouteRouteImport.update({
   path: '/profile',
   getParentRoute: () => SellerRouteRoute,
 } as any)
+const RequestsIdRouteRoute = RequestsIdRouteRouteImport.update({
+  id: '/requests/$id',
+  path: '/requests/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductsIdRouteRoute = ProductsIdRouteRouteImport.update({
   id: '/products/$id',
   path: '/products/$id',
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/farmers/$id': typeof FarmersIdRouteRoute
   '/farms/$id': typeof FarmsIdRouteRoute
   '/products/$id': typeof ProductsIdRouteRoute
+  '/requests/$id': typeof RequestsIdRouteRoute
   '/seller/profile': typeof SellerProfileRouteRoute
   '/chat/$id': typeof ChatIdRoute
   '/chat/': typeof ChatIndexRoute
@@ -188,6 +195,7 @@ export interface FileRoutesByTo {
   '/farmers/$id': typeof FarmersIdRouteRoute
   '/farms/$id': typeof FarmsIdRouteRoute
   '/products/$id': typeof ProductsIdRouteRoute
+  '/requests/$id': typeof RequestsIdRouteRoute
   '/seller/profile': typeof SellerProfileRouteRoute
   '/chat/$id': typeof ChatIdRoute
   '/chat': typeof ChatIndexRoute
@@ -214,6 +222,7 @@ export interface FileRoutesById {
   '/farmers/$id': typeof FarmersIdRouteRoute
   '/farms/$id': typeof FarmsIdRouteRoute
   '/products/$id': typeof ProductsIdRouteRoute
+  '/requests/$id': typeof RequestsIdRouteRoute
   '/seller/profile': typeof SellerProfileRouteRoute
   '/chat/$id': typeof ChatIdRoute
   '/chat/': typeof ChatIndexRoute
@@ -240,6 +249,7 @@ export interface FileRouteTypes {
     | '/farmers/$id'
     | '/farms/$id'
     | '/products/$id'
+    | '/requests/$id'
     | '/seller/profile'
     | '/chat/$id'
     | '/chat/'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/farmers/$id'
     | '/farms/$id'
     | '/products/$id'
+    | '/requests/$id'
     | '/seller/profile'
     | '/chat/$id'
     | '/chat'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/farmers/$id'
     | '/farms/$id'
     | '/products/$id'
+    | '/requests/$id'
     | '/seller/profile'
     | '/chat/$id'
     | '/chat/'
@@ -313,6 +325,7 @@ export interface RootRouteChildren {
   FarmersIdRouteRoute: typeof FarmersIdRouteRoute
   FarmsIdRouteRoute: typeof FarmsIdRouteRoute
   ProductsIdRouteRoute: typeof ProductsIdRouteRoute
+  RequestsIdRouteRoute: typeof RequestsIdRouteRoute
   FarmsIndexRoute: typeof FarmsIndexRoute
 }
 
@@ -422,6 +435,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/seller/profile'
       preLoaderRoute: typeof SellerProfileRouteRouteImport
       parentRoute: typeof SellerRouteRoute
+    }
+    '/requests/$id': {
+      id: '/requests/$id'
+      path: '/requests/$id'
+      fullPath: '/requests/$id'
+      preLoaderRoute: typeof RequestsIdRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/products/$id': {
       id: '/products/$id'
@@ -542,6 +562,7 @@ const rootRouteChildren: RootRouteChildren = {
   FarmersIdRouteRoute: FarmersIdRouteRoute,
   FarmsIdRouteRoute: FarmsIdRouteRoute,
   ProductsIdRouteRoute: ProductsIdRouteRoute,
+  RequestsIdRouteRoute: RequestsIdRouteRoute,
   FarmsIndexRoute: FarmsIndexRoute,
 }
 export const routeTree = rootRouteImport

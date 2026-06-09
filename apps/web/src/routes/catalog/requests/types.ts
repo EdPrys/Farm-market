@@ -43,3 +43,15 @@ export interface CreateBuyerRequestPayload {
   budget?: number
   expiresAt?: string
 }
+
+export interface UpdateBuyerRequestPayload {
+  title?: string
+  description?: string
+  categoryId?: number
+  quantity?: number
+  unit?: string
+  location?: string
+  budget?: number | null
+  expiresAt?: string
+  status?: 'active' | 'closed'
+}

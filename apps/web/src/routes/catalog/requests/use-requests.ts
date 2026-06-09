@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { requestsApi } from './api'
-import type { CreateBuyerRequestPayload } from './types'
+import type { CreateBuyerRequestPayload, UpdateBuyerRequestPayload } from './types'
 
 export function useRequests(params: { category?: string; page?: number; enabled?: boolean }) {
   const { enabled = true, ...fetchParams } = params
@@ -16,6 +16,26 @@ export function useCreateRequest() {
   return useMutation({
     mutationFn: (payload: CreateBuyerRequestPayload) => requestsApi.createRequest(payload),
     onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['requests'] })
+      void queryClient.invalidateQueries({ queryKey: ['my-requests'] })
+    },
+  })
+}
+
+export function useRequest(id: number) {
+  return useQuery({
+    queryKey: ['request', id],
+    queryFn: () => requestsApi.getRequest(id),
+  })
+}
+
+export function useUpdateRequest() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: UpdateBuyerRequestPayload }) =>
+      requestsApi.updateRequest(id, payload),
+    onSuccess: (updated) => {
+      queryClient.setQueryData(['request', updated.id], updated)
       void queryClient.invalidateQueries({ queryKey: ['requests'] })
       void queryClient.invalidateQueries({ queryKey: ['my-requests'] })
     },
