@@ -86,6 +86,20 @@ router
 
     router
       .group(() => {
+        router.get('/', [controllers.requests.BuyerRequests, 'index'])
+        router.get('/:id', [controllers.requests.BuyerRequests, 'show'])
+        router
+          .group(() => {
+            router.post('/', [controllers.requests.BuyerRequests, 'store'])
+            router.patch('/:id', [controllers.requests.BuyerRequests, 'update'])
+            router.delete('/:id', [controllers.requests.BuyerRequests, 'destroy'])
+          })
+          .use(middleware.auth())
+      })
+      .prefix('requests')
+
+    router
+      .group(() => {
         router.get('/', [controllers.chat.Conversations, 'index'])
         router.post('/', [controllers.chat.Conversations, 'store'])
         router.get('unread-count', [controllers.chat.Conversations, 'unreadCount'])
