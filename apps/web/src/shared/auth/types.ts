@@ -4,6 +4,9 @@ export interface User {
   email: string
   isSeller: boolean
   farmName: string | null
+  phone: string | null
+  telegram: string | null
+  viber: string | null
   initials: string
   createdAt: string
   updatedAt: string | null
