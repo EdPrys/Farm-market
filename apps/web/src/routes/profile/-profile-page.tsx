@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { Button, Input, Label } from '@farm-market/ui'
+import { getFieldError, ApiValidationError } from '@/lib/api/errors'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
 import { useUpdateProfile } from './use-update-profile'
 import { useBecomeSeller } from './use-become-seller'
@@ -46,8 +47,11 @@ export function ProfilePage() {
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Іван Петренко"
             />
+            {getFieldError(updateProfile.error, 'fullName') && (
+              <p className="text-xs text-red-500 mt-0.5">{getFieldError(updateProfile.error, 'fullName')}</p>
+            )}
           </div>
-          {updateProfile.isError && (
+          {updateProfile.isError && !(updateProfile.error instanceof ApiValidationError) && (
             <p className="text-sm text-red-500">
               {updateProfile.error instanceof Error
                 ? updateProfile.error.message
@@ -81,8 +85,11 @@ export function ProfilePage() {
                 placeholder="Ферма Петренко"
                 required
               />
+              {getFieldError(becomeSeller.error, 'farmName') && (
+                <p className="text-xs text-red-500 mt-0.5">{getFieldError(becomeSeller.error, 'farmName')}</p>
+              )}
             </div>
-            {becomeSeller.isError && (
+            {becomeSeller.isError && !(becomeSeller.error instanceof ApiValidationError) && (
               <p className="text-sm text-red-500">
                 {becomeSeller.error instanceof Error
                   ? becomeSeller.error.message
