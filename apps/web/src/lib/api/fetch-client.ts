@@ -1,3 +1,6 @@
+import { ApiValidationError } from './errors'
+import type { ApiFieldError } from './errors'
+
 export const TOKEN_KEY = 'auth_token'
 
 const API_BASE = import.meta.env.VITE_API_URL ?? ''
@@ -13,7 +16,13 @@ export async function apiFetch<T = unknown>(path: string, init?: RequestInit): P
 
   const res = await fetch(`${API_BASE}${path}`, { ...init, headers })
   if (!res.ok) {
-    const body = (await res.json()) as { message?: string; errors?: Array<{ message: string }> }
+    const body = (await res.json()) as {
+      message?: string
+      errors?: Array<{ message: string; field?: string; rule?: string }>
+    }
+    if (res.status === 422 && Array.isArray(body.errors) && body.errors[0]?.field !== undefined) {
+      throw new ApiValidationError(body.errors as ApiFieldError[])
+    }
     const message = body.message ?? body.errors?.[0]?.message ?? 'Request failed'
     throw new Error(message)
   }
