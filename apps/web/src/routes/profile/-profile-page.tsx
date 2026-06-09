@@ -4,6 +4,8 @@ import { Button, Input, Label } from '@farm-market/ui'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
 import { useUpdateProfile } from './use-update-profile'
 import { useBecomeSeller } from './use-become-seller'
+import { useMyRequests, useCloseRequest, useDeleteRequest } from '../catalog/requests/use-requests'
+import { RequestCard } from '../catalog/requests/-request-card'
 
 export function ProfilePage() {
   const navigate = useNavigate()
@@ -101,6 +103,44 @@ export function ProfilePage() {
           </form>
         </section>
       )}
+
+      {user && <MyRequestsSection userId={user.id} />}
     </div>
+  )
+}
+
+function MyRequestsSection({ userId }: { userId: number }) {
+  const { data, isLoading } = useMyRequests(userId)
+  const closeRequest = useCloseRequest()
+  const deleteRequest = useDeleteRequest()
+
+  const requests = data?.data ?? []
+
+  return (
+    <section className="flex flex-col gap-4">
+      <h2 className="text-xl font-bold text-gray-900">Мої запити</h2>
+      {isLoading ? (
+        <p className="text-sm text-gray-500">Завантаження...</p>
+      ) : requests.length === 0 ? (
+        <p className="text-sm text-gray-500">
+          У вас ще немає запитів.{' '}
+          <a href="/catalog?tab=requests" className="text-green-700 underline">
+            Перейти до каталогу
+          </a>
+        </p>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {requests.map((req) => (
+            <RequestCard
+              key={req.id}
+              request={req}
+              isOwn
+              onClose={(id) => closeRequest.mutate(id)}
+              onDelete={(id) => deleteRequest.mutate(id)}
+            />
+          ))}
+        </div>
+      )}
+    </section>
   )
 }
