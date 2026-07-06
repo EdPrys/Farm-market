@@ -22,11 +22,4 @@ export default class ProfileController {
     await user.save()
     return serialize.withoutWrapping(UserTransformer.transform(user))
   }
-
-  async subscribe({ auth, serialize }: HttpContext) {
-    const user = auth.getUserOrFail()
-    user.isSubscribed = true
-    await user.save()
-    return serialize.withoutWrapping(UserTransformer.transform(user))
-  }
 }
