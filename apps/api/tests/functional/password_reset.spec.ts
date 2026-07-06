@@ -1,27 +1,16 @@
 import { test } from '@japa/runner'
 import testUtils from '@adonisjs/core/services/test_utils'
+import mail from '@adonisjs/mail/services/main'
 import User from '#models/user'
 import PasswordResetToken from '#models/password_reset_token'
 import { DateTime } from 'luxon'
 
-let savedFetch: typeof global.fetch
-
-function mockFetch() {
-  savedFetch = global.fetch
-  global.fetch = async (_url: unknown, _init?: RequestInit) =>
-    new Response(JSON.stringify({ id: 'test-id' }), { status: 200 })
-}
-
-function restoreFetch() {
-  global.fetch = savedFetch
-}
-
 test.group('POST /api/v1/auth/forgot-password', (group) => {
   group.each.setup(() => {
     process.env.FRONTEND_URL = 'http://localhost:5173'
-    mockFetch()
+    mail.fake()
     return async () => {
-      restoreFetch()
+      mail.restore()
       delete process.env.FRONTEND_URL
       await testUtils.db().truncate()
     }
