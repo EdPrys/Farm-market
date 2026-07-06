@@ -1,74 +1,53 @@
 import { test } from '@japa/runner'
+import mail from '@adonisjs/mail/services/main'
 import { sendEmail, processMessageNotification } from '#jobs/send_message_notification'
 
 test.group('sendEmail', (group) => {
-  let originalFetch: typeof global.fetch
+  let fake: ReturnType<typeof mail.fake>
 
   group.each.setup(() => {
-    originalFetch = global.fetch
-  })
-
-  group.each.teardown(() => {
-    global.fetch = originalFetch
-  })
-
-  test('sends POST request to Resend with correct auth header', async ({ assert }) => {
-    const calls: { url: string; init: RequestInit }[] = []
-
-    global.fetch = async (url: string | URL | Request, init?: RequestInit) => {
-      calls.push({ url: url.toString(), init: init ?? {} })
-      return new Response(JSON.stringify({ id: 'test-id' }), { status: 200 })
-    }
-
-    process.env.RESEND_API_KEY = 'test-key'
+    fake = mail.fake()
     process.env.MAIL_FROM = 'noreply@example.com'
+    return () => mail.restore()
+  })
 
+  test('sends the email via SMTP with the correct recipient, subject, and from address', async () => {
     await sendEmail({
       to: 'user@example.com',
       subject: 'Test',
       text: 'Hello',
     })
 
-    assert.equal(calls.length, 1)
-    assert.equal(calls[0].url, 'https://api.resend.com/emails')
-    assert.equal((calls[0].init as RequestInit).method, 'POST')
-    const authHeader = ((calls[0].init as RequestInit).headers as Record<string, string>)[
-      'Authorization'
-    ]
-    assert.equal(authHeader, 'Bearer test-key')
+    fake.messages.assertSent(
+      (message) =>
+        message.hasTo('user@example.com') &&
+        message.hasSubject('Test') &&
+        message.hasFrom('noreply@example.com')
+    )
   })
 
-  test('throws when Resend returns non-200', async ({ assert }) => {
-    global.fetch = async () => new Response('Bad Request', { status: 400 })
+  test('includes html when provided', async () => {
+    await sendEmail({
+      to: 'user@example.com',
+      subject: 'Test',
+      text: 'Hello',
+      html: '<p>Hello</p>',
+    })
 
-    process.env.RESEND_API_KEY = 'test-key'
-    process.env.MAIL_FROM = 'noreply@example.com'
-
-    await assert.rejects(
-      () => sendEmail({ to: 'user@example.com', subject: 'Test', text: 'Hello' }),
-      /Resend error: 400/
-    )
+    fake.messages.assertSent((message) => message.nodeMailerMessage.html === '<p>Hello</p>')
   })
 })
 
 test.group('processMessageNotification', (group) => {
-  let originalFetch: typeof global.fetch
+  let fake: ReturnType<typeof mail.fake>
 
   group.each.setup(() => {
-    originalFetch = global.fetch
+    fake = mail.fake()
+    process.env.MAIL_FROM = 'noreply@example.com'
+    return () => mail.restore()
   })
 
-  group.each.teardown(() => {
-    global.fetch = originalFetch
-  })
-
-  test('skips if message was already read', async ({ assert }) => {
-    let fetchCalled = false
-    global.fetch = async () => {
-      fetchCalled = true
-      return new Response('{}', { status: 200 })
-    }
-
+  test('skips if message was already read', async () => {
     const fakeMessage = {
       readAt: new Date(),
       notificationSentAt: null,
@@ -96,16 +75,10 @@ test.group('processMessageNotification', (group) => {
 
     await processMessageNotification({ data: { messageId: 1 } })
 
-    assert.isFalse(fetchCalled)
+    fake.messages.assertNoneSent()
   })
 
-  test('skips if notification was already sent', async ({ assert }) => {
-    let fetchCalled = false
-    global.fetch = async () => {
-      fetchCalled = true
-      return new Response('{}', { status: 200 })
-    }
-
+  test('skips if notification was already sent', async () => {
     const fakeMessage = {
       readAt: null,
       notificationSentAt: new Date(),
@@ -132,6 +105,6 @@ test.group('processMessageNotification', (group) => {
 
     await processMessageNotification({ data: { messageId: 1 } })
 
-    assert.isFalse(fetchCalled)
+    fake.messages.assertNoneSent()
   })
 })
