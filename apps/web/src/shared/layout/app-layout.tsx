@@ -91,6 +91,16 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </div>
       </header>
       <main className="flex-1">{children}</main>
+      <footer className="border-t bg-white">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-center gap-6 text-xs text-gray-500">
+          <Link to="/privacy" className="hover:text-green-700">
+            Політика конфіденційності
+          </Link>
+          <Link to="/terms" className="hover:text-green-700">
+            Умови використання
+          </Link>
+        </div>
+      </footer>
     </div>
   )
 }

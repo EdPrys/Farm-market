@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { ReactNode } from 'react'
+import { Link } from '@tanstack/react-router'
 import { Logo } from './logo'
 
 const slides = [
@@ -57,6 +58,14 @@ export function AuthLayout({ children }: { children: ReactNode }) {
       </div>
       <div className="flex flex-1 flex-col items-center justify-center p-8">
         {children}
+        <div className="flex gap-4 mt-6 text-xs text-gray-400">
+          <Link to="/privacy" className="hover:text-green-700">
+            Політика конфіденційності
+          </Link>
+          <Link to="/terms" className="hover:text-green-700">
+            Умови використання
+          </Link>
+        </div>
       </div>
     </div>
   )
