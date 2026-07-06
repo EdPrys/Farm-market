@@ -81,7 +81,7 @@ app.ready(async () => {
             'message',
             { messageId: message.id },
             {
-              delay: 15 * 60 * 1000,
+              delay: 5 * 60 * 1000,
               attempts: 3,
               backoff: { type: 'exponential', delay: 5000 },
             }
