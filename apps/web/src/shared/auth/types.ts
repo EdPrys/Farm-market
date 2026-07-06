@@ -3,7 +3,6 @@ export interface User {
   fullName: string | null
   email: string
   isSeller: boolean
-  isSubscribed: boolean
   farmName: string | null
   phone: string | null
   telegram: string | null
