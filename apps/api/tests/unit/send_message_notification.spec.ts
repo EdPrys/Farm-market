@@ -1,5 +1,8 @@
 import { test } from '@japa/runner'
 import mail from '@adonisjs/mail/services/main'
+import { Mailer } from '@adonisjs/mail'
+import { SMTPTransport } from '@adonisjs/mail/transports/smtp'
+import emitter from '@adonisjs/core/services/emitter'
 import { sendEmail, processMessageNotification } from '#jobs/send_message_notification'
 
 test.group('sendEmail', (group) => {
@@ -35,6 +38,27 @@ test.group('sendEmail', (group) => {
     })
 
     fake.messages.assertSent((message) => message.nodeMailerMessage.html === '<p>Hello</p>')
+  })
+
+  test('the SMTP transport rejects when the server is unreachable (the mechanism sendEmail() relies on for error propagation)', async ({
+    assert,
+  }) => {
+    // sendEmail() always sends through the app's globally configured 'smtp' mailer, whose
+    // host/port are fixed for the whole test run (config/mail.ts resolves them from env once
+    // at boot). To exercise an unreachable-host failure without changing sendEmail()'s
+    // signature, this builds an isolated Mailer wrapping the same SMTPTransport class
+    // sendEmail() uses under the hood, pointed at a port nothing is listening on.
+    const unreachableMailer = new Mailer(
+      'unreachable',
+      new SMTPTransport({ host: '127.0.0.1', port: 1, connectionTimeout: 2000 }),
+      emitter
+    )
+
+    await assert.rejects(() =>
+      unreachableMailer.send((message) => {
+        message.to('user@example.com').from('noreply@example.com').subject('Test').text('Hello')
+      })
+    )
   })
 })
 
