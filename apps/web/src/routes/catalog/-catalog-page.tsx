@@ -61,16 +61,16 @@ export function CatalogPage() {
       </div>
 
       {tab === 'products' ? (
-        <div className="flex gap-6">
-          <aside className="w-44 shrink-0">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+        <div className="flex flex-col md:flex-row gap-6">
+          <aside className="md:w-44 md:shrink-0">
+            <p className="hidden md:block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
               Категорії
             </p>
-            <ul className="flex flex-col gap-1">
-              <li>
+            <ul className="flex overflow-x-auto gap-2 pb-1 md:flex-col md:gap-1 md:overflow-visible md:pb-0">
+              <li className="shrink-0">
                 <button
                   onClick={() => handleCategoryClick(undefined)}
-                  className={`w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors ${
+                  className={`whitespace-nowrap md:whitespace-normal md:w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors ${
                     !activeCategory
                       ? 'bg-green-100 text-green-800 font-semibold'
                       : 'text-gray-700 hover:bg-gray-100'
@@ -80,10 +80,10 @@ export function CatalogPage() {
                 </button>
               </li>
               {categories.map((cat) => (
-                <li key={cat.id}>
+                <li key={cat.id} className="shrink-0">
                   <button
                     onClick={() => handleCategoryClick(cat.slug)}
-                    className={`w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors ${
+                    className={`whitespace-nowrap md:whitespace-normal md:w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors ${
                       activeCategory === cat.slug
                         ? 'bg-green-100 text-green-800 font-semibold'
                         : 'text-gray-700 hover:bg-gray-100'
@@ -111,7 +111,7 @@ export function CatalogPage() {
             ) : products.length === 0 ? (
               <p className="text-sm text-gray-500">Товарів не знайдено</p>
             ) : (
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
