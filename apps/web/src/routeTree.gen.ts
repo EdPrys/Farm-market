@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SignupRouteRouteImport } from './routes/signup/route'
 import { Route as SellerRouteRouteImport } from './routes/seller/route'
 import { Route as ResetPasswordRouteRouteImport } from './routes/reset-password/route'
@@ -34,6 +36,16 @@ import { Route as SellerFarmIndexRouteImport } from './routes/seller/farm/index'
 import { Route as SellerProductsNewRouteRouteImport } from './routes/seller/products/new/route'
 import { Route as SellerProductsIdEditRouteRouteImport } from './routes/seller/products/$id/edit/route'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRouteRoute = SignupRouteRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -167,6 +179,8 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRouteRoute
   '/seller': typeof SellerRouteRouteWithChildren
   '/signup': typeof SignupRouteRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRoute
   '/farmers/$id': typeof FarmersIdRouteRoute
   '/farms/$id': typeof FarmsIdRouteRoute
@@ -191,6 +205,8 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRouteRoute
   '/seller': typeof SellerRouteRouteWithChildren
   '/signup': typeof SignupRouteRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRoute
   '/farmers/$id': typeof FarmersIdRouteRoute
   '/farms/$id': typeof FarmsIdRouteRoute
@@ -218,6 +234,8 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRouteRoute
   '/seller': typeof SellerRouteRouteWithChildren
   '/signup': typeof SignupRouteRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRoute
   '/farmers/$id': typeof FarmersIdRouteRoute
   '/farms/$id': typeof FarmsIdRouteRoute
@@ -245,6 +263,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/seller'
     | '/signup'
+    | '/privacy'
+    | '/terms'
     | '/dashboard'
     | '/farmers/$id'
     | '/farms/$id'
@@ -269,6 +289,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/seller'
     | '/signup'
+    | '/privacy'
+    | '/terms'
     | '/dashboard'
     | '/farmers/$id'
     | '/farms/$id'
@@ -295,6 +317,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/seller'
     | '/signup'
+    | '/privacy'
+    | '/terms'
     | '/_authenticated/dashboard'
     | '/farmers/$id'
     | '/farms/$id'
@@ -322,6 +346,8 @@ export interface RootRouteChildren {
   ResetPasswordRouteRoute: typeof ResetPasswordRouteRoute
   SellerRouteRoute: typeof SellerRouteRouteWithChildren
   SignupRouteRoute: typeof SignupRouteRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
   FarmersIdRouteRoute: typeof FarmersIdRouteRoute
   FarmsIdRouteRoute: typeof FarmsIdRouteRoute
   ProductsIdRouteRoute: typeof ProductsIdRouteRoute
@@ -331,6 +357,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -559,6 +599,8 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRouteRoute: ResetPasswordRouteRoute,
   SellerRouteRoute: SellerRouteRouteWithChildren,
   SignupRouteRoute: SignupRouteRoute,
+  PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
   FarmersIdRouteRoute: FarmersIdRouteRoute,
   FarmsIdRouteRoute: FarmsIdRouteRoute,
   ProductsIdRouteRoute: ProductsIdRouteRoute,
