@@ -5,6 +5,7 @@ import User from '#models/user'
 import Conversation from '#models/conversation'
 import Message from '#models/message'
 import { Secret } from '@adonisjs/core/helpers'
+import { sendMessageSchema } from '#validators/chat'
 
 export let io: Server
 
@@ -57,37 +58,39 @@ app.ready(async () => {
     })
 
     // Надіслати повідомлення
-    socket.on(
-      'send',
-      async ({ conversationId, text }: { conversationId: number; text: string }) => {
-        const conversation = await Conversation.query()
-          .where('id', conversationId)
-          .where((q) => q.where('buyer_id', user.id).orWhere('seller_id', user.id))
-          .first()
+    socket.on('send', async (payload: unknown) => {
+      const result = sendMessageSchema.safeParse(payload)
+      if (!result.success) return
 
-        if (!conversation || !text?.trim()) return
+      const { conversationId, text } = result.data
 
-        const message = await Message.create({
-          conversationId,
-          senderId: user.id,
-          text: text.trim(),
-        })
+      const conversation = await Conversation.query()
+        .where('id', conversationId)
+        .where((q) => q.where('buyer_id', user.id).orWhere('seller_id', user.id))
+        .first()
 
-        io.to(`conversation:${conversationId}`).emit('new_message', message.serialize())
+      if (!conversation) return
 
-        const { notificationQueue } = await import('#start/queue')
-        if (notificationQueue) {
-          await notificationQueue.add(
-            'message',
-            { messageId: message.id },
-            {
-              delay: 5 * 60 * 1000,
-              attempts: 3,
-              backoff: { type: 'exponential', delay: 5000 },
-            }
-          )
-        }
+      const message = await Message.create({
+        conversationId,
+        senderId: user.id,
+        text,
+      })
+
+      io.to(`conversation:${conversationId}`).emit('new_message', message.serialize())
+
+      const { notificationQueue } = await import('#start/queue')
+      if (notificationQueue) {
+        await notificationQueue.add(
+          'message',
+          { messageId: message.id },
+          {
+            delay: 5 * 60 * 1000,
+            attempts: 3,
+            backoff: { type: 'exponential', delay: 5000 },
+          }
+        )
       }
-    )
+    })
   })
 })
