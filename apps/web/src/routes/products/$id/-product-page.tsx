@@ -38,8 +38,8 @@ export function ProductPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 flex gap-8">
-      <div className="w-80 shrink-0">
+    <div className="max-w-4xl mx-auto px-4 py-8 flex flex-col sm:flex-row gap-8">
+      <div className="sm:w-80 sm:shrink-0">
         <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center">
           {product.imagePath ? (
             <img src={product.imagePath} alt={product.name} className="w-full h-full object-cover" />
