@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Logo } from '../auth/logo'
 import { useCurrentUser } from '../auth/use-current-user'
@@ -12,6 +12,66 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const navigate = useNavigate()
   const cartCount = useCartStore((state) => state.items.length)
   const { data: unread } = useUnreadCount()
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const linkClass = 'text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold'
+
+  const navLinks = (
+    <>
+      <Link to="/catalog" className={linkClass} onClick={() => setMenuOpen(false)}>
+        Каталог
+      </Link>
+      <Link to="/farms" className={linkClass} onClick={() => setMenuOpen(false)}>
+        Ферми
+      </Link>
+      {user?.isSeller && (
+        <Link to="/seller/products" className={linkClass} onClick={() => setMenuOpen(false)}>
+          Мої товари
+        </Link>
+      )}
+      {user?.isSeller && (
+        <Link to="/seller/farm" className={linkClass} onClick={() => setMenuOpen(false)}>
+          Моя ферма
+        </Link>
+      )}
+      {user && (
+        <>
+          <Link to="/cart" className={`relative ${linkClass}`} onClick={() => setMenuOpen(false)}>
+            Кошик
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-3 bg-green-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                {cartCount > 9 ? '9+' : cartCount}
+              </span>
+            )}
+          </Link>
+          <Link to="/chat" className={`relative ${linkClass}`} onClick={() => setMenuOpen(false)}>
+            Повідомлення
+            {!!unread?.count && unread.count > 0 && (
+              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                {unread.count > 9 ? '9+' : unread.count}
+              </span>
+            )}
+          </Link>
+          <Link
+            to={user.isSeller ? '/seller/profile' : '/profile'}
+            className={linkClass}
+            onClick={() => setMenuOpen(false)}
+          >
+            Профіль
+          </Link>
+          <button
+            onClick={() => {
+              setMenuOpen(false)
+              void logout.mutate(undefined, { onSettled: () => void navigate({ to: '/' }) })
+            }}
+            className="text-left text-gray-700 hover:text-red-600"
+          >
+            Вийти
+          </button>
+        </>
+      )}
+    </>
+  )
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -20,75 +80,20 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <Link to="/">
             <Logo variant="dark" />
           </Link>
-          <nav className="flex items-center gap-6 text-sm font-medium">
-            <Link
-              to="/catalog"
-              className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
-            >
-              Каталог
-            </Link>
-            <Link
-              to="/farms"
-              className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
-            >
-              Ферми
-            </Link>
-            {user?.isSeller && (
-              <Link
-                to="/seller/products"
-                className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
-              >
-                Мої товари
-              </Link>
-            )}
-            {user?.isSeller && (
-              <Link
-                to="/seller/farm"
-                className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
-              >
-                Моя ферма
-              </Link>
-            )}
-            {user && (
-              <>
-                <Link
-                  to="/cart"
-                  className="relative text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
-                >
-                  Кошик
-                  {cartCount > 0 && (
-                    <span className="absolute -top-2 -right-3 bg-green-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
-                      {cartCount > 9 ? '9+' : cartCount}
-                    </span>
-                  )}
-                </Link>
-                <Link
-                  to="/chat"
-                  className="relative text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
-                >
-                  Повідомлення
-                  {!!unread?.count && unread.count > 0 && (
-                    <span className="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
-                      {unread.count > 9 ? '9+' : unread.count}
-                    </span>
-                  )}
-                </Link>
-                <Link
-                  to={user.isSeller ? '/seller/profile' : '/profile'}
-                  className="text-gray-700 hover:text-green-700 [&.active]:text-green-700 [&.active]:font-semibold"
-                >
-                  Профіль
-                </Link>
-                <button
-                  onClick={() => void logout.mutate(undefined, { onSettled: () => void navigate({ to: '/' }) })}
-                  className="text-gray-700 hover:text-red-600"
-                >
-                  Вийти
-                </button>
-              </>
-            )}
-          </nav>
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">{navLinks}</nav>
+          <button
+            onClick={() => setMenuOpen((open) => !open)}
+            className="md:hidden text-2xl text-gray-700 leading-none"
+            aria-label={menuOpen ? 'Закрити меню' : 'Відкрити меню'}
+          >
+            {menuOpen ? '✕' : '☰'}
+          </button>
         </div>
+        {menuOpen && (
+          <nav className="md:hidden border-t px-4 py-3 flex flex-col gap-3 text-sm font-medium bg-white">
+            {navLinks}
+          </nav>
+        )}
       </header>
       <main className="flex-1">{children}</main>
       <footer className="border-t bg-white">
