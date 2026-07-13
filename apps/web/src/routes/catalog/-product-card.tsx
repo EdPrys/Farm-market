@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import type { Product } from './types'
+import { deliveryMethodLabel } from './delivery-methods'
 import { useCartStore } from '@/shared/cart/use-cart'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
 
@@ -55,6 +56,18 @@ export function ProductCard({ product }: Props) {
         <p className="text-sm font-bold text-green-700 mt-1">
           {product.price} ₴ / {product.unit}
         </p>
+        {product.deliveryMethods.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-1">
+            {product.deliveryMethods.map((method) => (
+              <span
+                key={method}
+                className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded"
+              >
+                {deliveryMethodLabel(method)}
+              </span>
+            ))}
+          </div>
+        )}
         {user && (
           cartItem ? (
             <div

@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from '@tanstack/react-router'
 import { useMutation } from '@tanstack/react-query'
 import { useProduct } from './use-product'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
+import { deliveryMethodLabel } from '../../catalog/delivery-methods'
 import { ContactBlock } from '../../farmers/$id/-contact-block'
 import { useCartStore } from '@/shared/cart/use-cart'
 import { chatApi } from '@/routes/chat/api'
@@ -55,6 +56,18 @@ export function ProductPage() {
             {product.category.name}
           </span>
         </div>
+        {product.deliveryMethods.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {product.deliveryMethods.map((method) => (
+              <span
+                key={method}
+                className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full"
+              >
+                {deliveryMethodLabel(method)}
+              </span>
+            ))}
+          </div>
+        )}
         <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
         <p className="text-3xl font-bold text-green-700">
           {product.price} ₴{' '}
