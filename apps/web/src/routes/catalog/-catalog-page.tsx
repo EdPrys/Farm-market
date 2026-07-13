@@ -5,6 +5,7 @@ import { useCategories } from './use-categories'
 import { useProducts } from './use-products'
 import { ProductCard } from './-product-card'
 import { RequestsList } from './requests/-requests-list'
+import { DELIVERY_METHODS } from './delivery-methods'
 
 export function CatalogPage() {
   const search = useSearch({ from: '/catalog' })
@@ -14,11 +15,13 @@ export function CatalogPage() {
   const tab = search.tab ?? 'products'
   const activeCategory = search.category
   const activeSearch = search.search
+  const activeDeliveryMethod = search.deliveryMethod
 
   const { data: categories = [] } = useCategories()
   const { data: products = [], isLoading } = useProducts({
     category: activeCategory,
     search: activeSearch,
+    deliveryMethod: activeDeliveryMethod,
   })
 
   const handleTabChange = (newTab: 'products' | 'requests') => {
@@ -27,6 +30,10 @@ export function CatalogPage() {
 
   const handleCategoryClick = (slug?: string) => {
     void navigate({ search: (prev) => ({ ...prev, category: slug, search: undefined }) })
+  }
+
+  const handleDeliveryMethodClick = (value?: string) => {
+    void navigate({ search: (prev) => ({ ...prev, deliveryMethod: value, search: undefined }) })
   }
 
   const handleSearch = (value: string) => {
@@ -90,6 +97,37 @@ export function CatalogPage() {
                     }`}
                   >
                     {cat.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <p className="hidden md:block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 mt-4">
+              Доставка
+            </p>
+            <ul className="flex overflow-x-auto gap-2 pb-1 md:flex-col md:gap-1 md:overflow-visible md:pb-0">
+              <li className="shrink-0">
+                <button
+                  onClick={() => handleDeliveryMethodClick(undefined)}
+                  className={`whitespace-nowrap md:whitespace-normal md:w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors ${
+                    !activeDeliveryMethod
+                      ? 'bg-green-100 text-green-800 font-semibold'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  Всі
+                </button>
+              </li>
+              {DELIVERY_METHODS.map((method) => (
+                <li key={method.value} className="shrink-0">
+                  <button
+                    onClick={() => handleDeliveryMethodClick(method.value)}
+                    className={`whitespace-nowrap md:whitespace-normal md:w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors ${
+                      activeDeliveryMethod === method.value
+                        ? 'bg-green-100 text-green-800 font-semibold'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {method.label}
                   </button>
                 </li>
               ))}

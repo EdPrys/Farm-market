@@ -49,6 +49,13 @@ describe('catalogApi', () => {
       const [url] = mockFetch.mock.calls[0] as [string]
       expect(url).toContain('random=true')
     })
+
+    it('appends deliveryMethod param when provided', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ data: [] }) })
+      await catalogApi.getProducts({ deliveryMethod: 'nova_poshta' })
+      const [url] = mockFetch.mock.calls[0] as [string]
+      expect(url).toContain('deliveryMethod=nova_poshta')
+    })
   })
 
   describe('getProduct', () => {

@@ -6,15 +6,17 @@ interface GetProductsParams {
   search?: string
   limit?: number
   random?: boolean
+  deliveryMethod?: string
 }
 
 export const catalogApi = {
-  getProducts: ({ category, search, limit, random }: GetProductsParams) => {
+  getProducts: ({ category, search, limit, random, deliveryMethod }: GetProductsParams) => {
     const params = new URLSearchParams()
     if (category) params.set('category', category)
     if (search) params.set('search', search)
     if (limit !== undefined) params.set('limit', String(limit))
     if (random) params.set('random', 'true')
+    if (deliveryMethod) params.set('deliveryMethod', deliveryMethod)
     const qs = params.toString()
     return apiFetch<{ data: Product[] }>(`/api/v1/products${qs ? `?${qs}` : ''}`)
   },

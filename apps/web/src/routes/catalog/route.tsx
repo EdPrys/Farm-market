@@ -8,6 +8,7 @@ const searchSchema = z.object({
   tab: z.enum(['products', 'requests']).optional(),
   category: z.string().optional(),
   search: z.string().optional(),
+  deliveryMethod: z.string().optional(),
 })
 
 export const Route = createFileRoute('/catalog')({

@@ -4,6 +4,7 @@ import { catalogApi } from './api'
 interface UseProductsParams {
   category?: string
   search?: string
+  deliveryMethod?: string
 }
 
 export function useProducts(params: UseProductsParams) {
