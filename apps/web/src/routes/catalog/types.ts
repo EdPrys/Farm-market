@@ -26,6 +26,7 @@ export interface Product {
   quantity: string
   imagePath: string | null
   status: 'active' | 'inactive' | 'archived'
+  deliveryMethods: string[]
   category: Category
   seller: ProductSeller
 }

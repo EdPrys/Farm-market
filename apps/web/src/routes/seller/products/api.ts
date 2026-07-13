@@ -15,6 +15,7 @@ export interface ProductInput {
   unit: string
   quantity: number
   status?: 'active' | 'inactive' | 'archived'
+  deliveryMethods: string[]
 }
 
 export type ProductUpdateInput = Partial<ProductInput>

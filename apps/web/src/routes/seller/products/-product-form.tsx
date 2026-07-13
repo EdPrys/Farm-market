@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { Button, Input, Label } from '@farm-market/ui'
 import { useCategories } from '../../catalog/use-categories'
 import { getFieldError, ApiValidationError } from '@/lib/api/errors'
+import { DELIVERY_METHODS } from '../../catalog/delivery-methods'
 import type { Product } from '../../catalog/types'
 import type { ProductInput } from './api'
 
@@ -27,6 +28,7 @@ export function ProductForm({ initial, onSubmit, onImageChange, isPending, error
     initial?.status ?? 'active',
   )
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [deliveryMethods, setDeliveryMethods] = useState<string[]>(initial?.deliveryMethods ?? [])
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const { data: categories = [] } = useCategories()
@@ -41,7 +43,14 @@ export function ProductForm({ initial, onSubmit, onImageChange, isPending, error
       unit,
       quantity: Number(quantity),
       status,
+      deliveryMethods,
     })
+  }
+
+  const toggleDeliveryMethod = (method: string) => {
+    setDeliveryMethods((prev) =>
+      prev.includes(method) ? prev.filter((m) => m !== method) : [...prev, method],
+    )
   }
 
   return (
@@ -140,6 +149,26 @@ export function ProductForm({ initial, onSubmit, onImageChange, isPending, error
           <option value="inactive">Неактивний</option>
           <option value="archived">Архівний</option>
         </select>
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <Label>Спосіб доставки</Label>
+        <div className="flex flex-wrap gap-2">
+          {DELIVERY_METHODS.map((method) => (
+            <button
+              key={method.value}
+              type="button"
+              onClick={() => toggleDeliveryMethod(method.value)}
+              className={`px-3 py-1 rounded-full text-sm border transition-colors ${
+                deliveryMethods.includes(method.value)
+                  ? 'bg-green-700 text-white border-green-700'
+                  : 'bg-white text-gray-700 border-gray-300 hover:border-green-400'
+              }`}
+            >
+              {method.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-col gap-1.5">
