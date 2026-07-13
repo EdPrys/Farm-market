@@ -29,6 +29,7 @@ export default class SellerProductsController {
       unit: data.unit,
       quantity: String(data.quantity),
       status: data.status ?? 'active',
+      deliveryMethods: data.deliveryMethods ?? [],
       sellerId: seller.id,
     })
     await product.load('category')
@@ -56,6 +57,7 @@ export default class SellerProductsController {
     if (data.unit !== undefined) product.unit = data.unit
     if (data.quantity !== undefined) product.quantity = String(data.quantity)
     if (data.status !== undefined) product.status = data.status
+    if (data.deliveryMethods !== undefined) product.deliveryMethods = data.deliveryMethods
     await product.save()
 
     return serialize.withoutWrapping(ProductTransformer.transform(product))

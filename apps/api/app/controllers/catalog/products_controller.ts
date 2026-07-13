@@ -4,11 +4,12 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class ProductsController {
   async index({ request, serialize }: HttpContext) {
-    const { category, search, limit, random } = request.qs() as {
+    const { category, search, limit, random, deliveryMethod } = request.qs() as {
       category?: string
       search?: string
       limit?: string
       random?: string
+      deliveryMethod?: string
     }
 
     const query = Product.query().where('status', 'active').preload('category').preload('seller')
@@ -25,6 +26,10 @@ export default class ProductsController {
 
     if (search) {
       query.whereILike('name', `%${search}%`)
+    }
+
+    if (deliveryMethod) {
+      query.whereRaw('delivery_methods @> ?', [JSON.stringify([deliveryMethod])])
     }
 
     if (limit) {
@@ -57,6 +62,7 @@ export default class ProductsController {
       quantity: product.quantity,
       imagePath: product.imagePath,
       status: product.status,
+      deliveryMethods: product.deliveryMethods,
       category: product.category
         ? { id: product.category.id, name: product.category.name, slug: product.category.slug }
         : null,

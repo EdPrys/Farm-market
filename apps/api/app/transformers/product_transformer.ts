@@ -12,6 +12,7 @@ export default class ProductTransformer extends BaseTransformer<Product> {
         'quantity',
         'imagePath',
         'status',
+        'deliveryMethods',
       ]),
       category: this.resource.category
         ? {

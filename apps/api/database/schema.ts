@@ -187,12 +187,14 @@ export class PasswordResetTokenSchema extends BaseModel {
 }
 
 export class ProductSchema extends BaseModel {
-  static $columns = ['categoryId', 'createdAt', 'description', 'id', 'imagePath', 'name', 'price', 'quantity', 'sellerId', 'status', 'unit', 'updatedAt'] as const
+  static $columns = ['categoryId', 'createdAt', 'deliveryMethods', 'description', 'id', 'imagePath', 'name', 'price', 'quantity', 'sellerId', 'status', 'unit', 'updatedAt'] as const
   $columns = ProductSchema.$columns
   @column()
   declare categoryId: number
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
+  @column()
+  declare deliveryMethods: any
   @column()
   declare description: string | null
   @column({ isPrimary: true })

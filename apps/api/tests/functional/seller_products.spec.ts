@@ -109,6 +109,26 @@ test.group('POST /api/v1/seller/products', (group) => {
     assert.equal(body.status, 'active')
   })
 
+  test('creates a product with delivery methods', async ({ client, assert }) => {
+    const { seller, category } = await createSellerAndCategory()
+
+    const response = await client
+      .post('/api/v1/seller/products')
+      .json({
+        name: 'Кролятина',
+        categoryId: category.id,
+        price: 200,
+        unit: 'кг',
+        quantity: 10,
+        deliveryMethods: ['nova_poshta', 'pickup'],
+      })
+      .loginAs(seller)
+
+    response.assertStatus(201)
+    const body = response.body() as { deliveryMethods: string[] }
+    assert.deepEqual(body.deliveryMethods, ['nova_poshta', 'pickup'])
+  })
+
   test('returns 422 for missing required fields', async ({ client }) => {
     const { seller } = await createSellerAndCategory()
     const response = await client
@@ -143,6 +163,29 @@ test.group('PUT /api/v1/seller/products/:id', (group) => {
     const body = response.body() as { name: string; status: string }
     assert.equal(body.name, 'New')
     assert.equal(body.status, 'inactive')
+  })
+
+  test('updates delivery methods', async ({ client, assert }) => {
+    const { seller, category } = await createSellerAndCategory()
+    const product = await Product.create({
+      sellerId: seller.id,
+      categoryId: category.id,
+      name: 'Old',
+      price: '10',
+      unit: 'кг',
+      quantity: '1',
+      status: 'active',
+      deliveryMethods: ['pickup'],
+    })
+
+    const response = await client
+      .put(`/api/v1/seller/products/${product.id}`)
+      .json({ deliveryMethods: ['nova_poshta', 'ukrposhta'] })
+      .loginAs(seller)
+
+    response.assertStatus(200)
+    const body = response.body() as { deliveryMethods: string[] }
+    assert.deepEqual(body.deliveryMethods, ['nova_poshta', 'ukrposhta'])
   })
 
   test('cannot update another sellers product', async ({ client }) => {

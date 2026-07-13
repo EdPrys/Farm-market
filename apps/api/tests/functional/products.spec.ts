@@ -210,6 +210,42 @@ test.group('GET /api/v1/products', (group) => {
     assert.lengthOf(body.data, 1)
     assert.equal(body.data[0]!.name, 'Томати черрі')
   })
+
+  test('filters by delivery method', async ({ client, assert }) => {
+    const seller = await User.create({
+      fullName: 'Y',
+      email: 'y@test.com',
+      password: 'secret123',
+      isSeller: true,
+    })
+    const category = await Category.create({ name: 'Овочі', slug: 'vegetables' })
+    await Product.create({
+      sellerId: seller.id,
+      categoryId: category.id,
+      name: 'Кролятина',
+      price: '200',
+      unit: 'кг',
+      quantity: '10',
+      status: 'active',
+      deliveryMethods: ['nova_poshta'],
+    })
+    await Product.create({
+      sellerId: seller.id,
+      categoryId: category.id,
+      name: 'Огірки',
+      price: '10',
+      unit: 'кг',
+      quantity: '1',
+      status: 'active',
+      deliveryMethods: ['pickup'],
+    })
+
+    const response = await client.get('/api/v1/products?deliveryMethod=nova_poshta')
+    response.assertStatus(200)
+    const body = response.body() as { data: { name: string }[] }
+    assert.lengthOf(body.data, 1)
+    assert.equal(body.data[0]!.name, 'Кролятина')
+  })
 })
 
 test.group('GET /api/v1/products/:id', (group) => {
@@ -236,6 +272,30 @@ test.group('GET /api/v1/products/:id', (group) => {
     const response = await client.get(`/api/v1/products/${product.id}`)
     response.assertStatus(200)
     response.assertBodyContains({ name: 'Томати', category: { slug: 'vegetables' } })
+  })
+
+  test('returns delivery methods', async ({ client }) => {
+    const seller = await User.create({
+      fullName: 'Іван',
+      email: 'ivan4@test.com',
+      password: 'secret123',
+      isSeller: true,
+    })
+    const category = await Category.create({ name: 'Овочі', slug: 'vegetables' })
+    const product = await Product.create({
+      sellerId: seller.id,
+      categoryId: category.id,
+      name: 'Кролятина',
+      price: '200',
+      unit: 'кг',
+      quantity: '10',
+      status: 'active',
+      deliveryMethods: ['nova_poshta'],
+    })
+
+    const response = await client.get(`/api/v1/products/${product.id}`)
+    response.assertStatus(200)
+    response.assertBodyContains({ deliveryMethods: ['nova_poshta'] })
   })
 
   test('returns 404 for non-existent product', async ({ client }) => {
