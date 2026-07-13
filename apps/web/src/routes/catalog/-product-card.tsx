@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import type { Product } from './types'
-import { deliveryMethodLabel } from './delivery-methods'
+import { deliveryMethodLabel } from './-delivery-methods'
 import { useCartStore } from '@/shared/cart/use-cart'
 import { useCurrentUser } from '@/shared/auth/use-current-user'
 

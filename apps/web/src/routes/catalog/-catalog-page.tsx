@@ -5,7 +5,7 @@ import { useCategories } from './use-categories'
 import { useProducts } from './use-products'
 import { ProductCard } from './-product-card'
 import { RequestsList } from './requests/-requests-list'
-import { DELIVERY_METHODS } from './delivery-methods'
+import { DELIVERY_METHODS } from './-delivery-methods'
 
 export function CatalogPage() {
   const search = useSearch({ from: '/catalog' })

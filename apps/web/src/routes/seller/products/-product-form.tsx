@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { Button, Input, Label } from '@farm-market/ui'
 import { useCategories } from '../../catalog/use-categories'
 import { getFieldError, ApiValidationError } from '@/lib/api/errors'
-import { DELIVERY_METHODS } from '../../catalog/delivery-methods'
+import { DELIVERY_METHODS } from '../../catalog/-delivery-methods'
 import type { Product } from '../../catalog/types'
 import type { ProductInput } from './api'
 
