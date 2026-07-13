@@ -104,9 +104,10 @@ test.group('POST /api/v1/seller/products', (group) => {
       .loginAs(seller)
 
     response.assertStatus(201)
-    const body = response.body() as { name: string; status: string }
+    const body = response.body() as { name: string; status: string; deliveryMethods: string[] }
     assert.equal(body.name, 'Томати')
     assert.equal(body.status, 'active')
+    assert.deepEqual(body.deliveryMethods, [])
   })
 
   test('creates a product with delivery methods', async ({ client, assert }) => {
